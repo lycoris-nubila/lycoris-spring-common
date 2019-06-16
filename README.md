@@ -26,3 +26,36 @@ Then dependency
   </dependency>
 <dependencies>
 ```
+### Features
+
+#### Add JWT support
+
+```
+@Configuration
+@EnableLycorisJwt
+public class MyConfiguration {
+
+  @Bean
+  public LycorisJwtSecretProvider secretProvider() {
+    return () -> "mybase64secret";
+  }
+}
+```
+
+#### Add JWT support with AWS Secret Manager
+
+```
+@Configuration
+@EnableLycorisJwt
+@EnableLycorisSecret
+public class MyConfiguration {
+
+  @Bean
+  public LycorisJwtSecretProvider secretProvider(AWSSecretsManager secretsManager) {
+    return () ->
+        secretsManager
+            .getSecretValue(new GetSecretValueRequest().withSecretId("JWT-Secret"))
+            .getSecretString();
+  }
+}
+```
