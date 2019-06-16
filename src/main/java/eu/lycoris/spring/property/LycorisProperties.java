@@ -15,6 +15,8 @@ public class LycorisProperties {
   private final AwsProperties sns = new AwsProperties();
 
   private final AwsProperties sqs = new AwsProperties();
+  
+  private final AwsProperties secret = new AwsProperties();
 
   @Getter
   @Setter
