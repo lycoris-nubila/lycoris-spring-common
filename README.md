@@ -36,6 +36,14 @@ public class MyConfiguration {
   }
 }
 ```
+Then add ***Authorization*** header in http request, following cases work:
+
+|Header       |Value         |
+|-------------|--------------|
+|Authorization|Bearer mytoken|
+|Authorization|bearer mytoken|
+|Authorization|mytoken|
+
 ---
 #### Add JWT support with AWS Secret Manager
 First add annotations in configuration class
@@ -63,3 +71,92 @@ lycoris:
     region: my-aws-region
 ```
 ---
+#### Add GraphQL support
+First add GraphQL SPQR dependency
+```xml
+<dependency>
+  <groupId>io.leangen.graphql</groupId>
+  <artifactId>graphql-spqr-spring-boot-starter</artifactId>
+  <version>0.0.4</version>
+</dependency>
+```
+Then add a GraphQLApi service using ***@GraphQLApi, @GraphQLQuery, @GraphQLMutation***
+```java
+@Service
+@GraphQLApi
+@Transactional
+public class UserGraphQLService {
+
+  @Autowired UserRepository userRepository;
+
+  @Autowired PasswordEncoder passwordEncoder;
+
+  @GraphQLQuery
+  public IUser authenticateUser(
+      String emailAddress,
+      String rawPassword) {
+    IUser user = userRepository.findByEmailAddress(emailAddress);
+    if (user == null) {
+      throw new LycorisApplicationException(
+          UserMessage.ERROR_WEB_REQUEST_USER_EMAIL_NOT_FOUND.getMessageKey());
+    }
+
+    if (!passwordEncoder.matches(rawPassword, user.getPasswordHash())) {
+      throw new LycorisApplicationException(
+          UserMessage.ERROR_WEB_REQUEST_USER_PASSWORD_DONT_MATCHES.getMessageKey());
+    }
+
+    return user;
+  }
+
+  @GraphQLMutation
+  public IUser createNewUser(
+      String lastName,
+      String firstName,
+      String emailAddress,
+      String rawPassword) {
+    if (userWithEmailAddressAlreadyExists(emailAddress)) {
+      throw new LycorisApplicationException(
+          UserMessage.ERROR_WEB_REQUEST_USER_EMAIL_ALREADY_EXISTS.getMessageKey());
+    }
+
+    User user =
+        User.builder(
+                UUID.randomUUID(),
+                lastName,
+                firstName,
+                emailAddress,
+                passwordEncoder.encode(rawPassword))
+            .build();
+
+    userRepository.save(user);
+
+    return user;
+  }
+
+  private boolean userWithEmailAddressAlreadyExists(String emailAddress) {
+    return userRepository.findByEmailAddress(emailAddress) != null;
+  }
+}
+```
+You can get JWT authentication if feature is enabled by adding ***@GraphQLRootContext*** parameter
+```java
+@GraphQLQuery
+public IUser authenticateUser(
+    @GraphQLRootContext JwtAuthenticationToken authentication,
+    String emailAddress,
+    String rawPassword) {
+  IUser user = userRepository.findByEmailAddress(emailAddress);
+  if (user == null) {
+    throw new LycorisApplicationException(
+        UserMessage.ERROR_WEB_REQUEST_USER_EMAIL_NOT_FOUND.getMessageKey());
+  }
+
+  if (!passwordEncoder.matches(rawPassword, user.getPasswordHash())) {
+    throw new LycorisApplicationException(
+        UserMessage.ERROR_WEB_REQUEST_USER_PASSWORD_DONT_MATCHES.getMessageKey());
+  }
+
+  return user;
+}
+```
