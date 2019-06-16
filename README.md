@@ -7,7 +7,7 @@ These instructions will help you to install and configure Lycoris Spring Common,
 ### Installing
 
 Using maven, you had to add git repository first
-```
+```xml
 <repositories>
   <repository>
     <id>lycoris-spring-common</id>
@@ -17,12 +17,12 @@ Using maven, you had to add git repository first
 ```
 
 Then dependency
-```
+```xml
 <dependencies>
   <dependency>
     <groupId>eu.lycoris</groupId>
     <artifactId>spring-common</artifactId>
-    <version>1.0</version>
+    <version>1.0.4</version>
   </dependency>
 <dependencies>
 ```
@@ -30,7 +30,7 @@ Then dependency
 
 #### Add JWT support
 
-```
+```java
 @Configuration
 @EnableLycorisJwt
 public class MyConfiguration {
@@ -44,7 +44,7 @@ public class MyConfiguration {
 
 #### Add JWT support with AWS Secret Manager
 
-```
+```java
 @Configuration
 @EnableLycorisJwt
 @EnableLycorisSecret
@@ -58,4 +58,15 @@ public class MyConfiguration {
             .getSecretString();
   }
 }
+```
+
+Then add AWS configuration properties:
+
+**application.yml**
+```yaml
+lycoris:
+  secret:
+    secret-key: My-Access-key-ID
+    access-key: My-Secret-access-key
+    region: my-aws-region
 ```
