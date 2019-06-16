@@ -118,8 +118,8 @@ public class LycorisCommandBus {
 
   @SuppressWarnings("unchecked")
   @Scheduled(
-    fixedDelayString = "${command.retry.delay:1000}",
-    initialDelayString = "${command.retry.delay:1000}"
+    fixedDelayString = "${command.retry.delay:10000}",
+    initialDelayString = "${command.retry.delay:10000}"
   )
   private void retryFailedCommands() {
     List<FailedCommand> failedCommands =
