@@ -1,6 +1,6 @@
 # lycoris-spring
 ## Getting Started
-These instructions will help you to install and configure Lycoris Spring Common, this library contains Async config, Schedule config, Domain Driven Design basic classes, GraphQL Jwt Context factory, Swagger config, Jwt filter, 
+These instructions will help you to install and configure Lycoris Spring Common, this library contains following features configs: ***Async, Schedule, Domain Driven Design, GraphQL, Swagger, Jwt, Aws SNS, Aws SQS, Aws Secret***
 ### Installing
 Using maven, you had to add git repository first
 ```xml
