@@ -8,6 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import eu.lycoris.spring.graphql.LycorisGraphQLFetchExceptionHandler;
 import graphql.GraphQL;
 import graphql.execution.AsyncExecutionStrategy;
+import graphql.execution.AsyncSerialExecutionStrategy;
+import graphql.execution.SubscriptionExecutionStrategy;
 import graphql.schema.GraphQLSchema;
 import io.leangen.graphql.spqr.spring.autoconfigure.ServletContextFactory;
 
@@ -21,9 +23,12 @@ public class LycorisGraphQLConfiguration {
 
   @Bean
   public GraphQL graphQL(GraphQLSchema graphQLSchema, MessageSource messageSource) {
+    LycorisGraphQLFetchExceptionHandler fetchExceptionHandler =
+        new LycorisGraphQLFetchExceptionHandler(messageSource);
     return GraphQL.newGraphQL(graphQLSchema)
-        .queryExecutionStrategy(
-            new AsyncExecutionStrategy(new LycorisGraphQLFetchExceptionHandler(messageSource)))
+        .queryExecutionStrategy(new AsyncExecutionStrategy(fetchExceptionHandler))
+        .mutationExecutionStrategy(new AsyncSerialExecutionStrategy(fetchExceptionHandler))
+        .subscriptionExecutionStrategy(new SubscriptionExecutionStrategy(fetchExceptionHandler))
         .build();
   }
 }
