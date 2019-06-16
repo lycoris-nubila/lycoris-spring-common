@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
@@ -18,9 +17,6 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-
-import io.leangen.graphql.spqr.spring.autoconfigure.DefaultGlobalContext;
-import io.leangen.graphql.spqr.spring.autoconfigure.ServletContextFactory;
 
 @Configuration
 public class LycorisConfiguration {
@@ -54,15 +50,6 @@ public class LycorisConfiguration {
   @Bean
   public JacksonJsonProvider jacksonJsonProvider(ObjectMapper mapper) {
     return new JacksonJsonProvider(mapper);
-  }
-
-  @Bean
-  public ServletContextFactory globalContextFactory() {
-    return params -> {
-      DefaultGlobalContext<?> context = new DefaultGlobalContext<>(params.getNativeRequest());
-      context.setExtension("auth", SecurityContextHolder.getContext().getAuthentication());
-      return context;
-    };
   }
 
   @Bean
