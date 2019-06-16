@@ -19,7 +19,9 @@ public class LycorisGraphQLConfiguration {
   public ServletContextFactory globalContextFactory() {
     return params -> {
       DefaultGlobalContext<?> context = new DefaultGlobalContext<>(params.getNativeRequest());
-      context.setExtension("auth", SecurityContextHolder.getContext().getAuthentication());
+      if (SecurityContextHolder.getContext().getAuthentication() != null) {
+        context.setExtension("auth", SecurityContextHolder.getContext().getAuthentication());
+      }
       return context;
     };
   }
