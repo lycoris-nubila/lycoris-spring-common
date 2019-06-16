@@ -1,11 +1,7 @@
 # lycoris-spring
-
 ## Getting Started
-
 These instructions will help you to install and configure Lycoris Spring Common, this library contains Async config, Schedule config, Domain Driven Design basic classes, GraphQL Jwt Context factory, Swagger config, Jwt filter, 
-
 ### Installing
-
 Using maven, you had to add git repository first
 ```xml
 <repositories>
@@ -15,7 +11,6 @@ Using maven, you had to add git repository first
   </repository>
 </repositories>
 ```
-
 Then dependency
 ```xml
 <dependencies>
@@ -27,9 +22,9 @@ Then dependency
 <dependencies>
 ```
 ### Features
-
+---
 #### Add JWT support
-
+First add annotation in configuration class
 ```java
 @Configuration
 @EnableLycorisJwt
@@ -41,9 +36,9 @@ public class MyConfiguration {
   }
 }
 ```
-
+---
 #### Add JWT support with AWS Secret Manager
-
+First add annotations in configuration class
 ```java
 @Configuration
 @EnableLycorisJwt
@@ -59,10 +54,7 @@ public class MyConfiguration {
   }
 }
 ```
-
-Then add AWS configuration properties:
-
-**application.yml**
+Then add AWS configuration properties in **application.yml**
 ```yaml
 lycoris:
   secret:
@@ -70,3 +62,4 @@ lycoris:
     access-key: My-Secret-access-key
     region: my-aws-region
 ```
+---
