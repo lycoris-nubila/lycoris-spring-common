@@ -1,0 +1,53 @@
+package eu.lycoris.spring.common;
+
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.UUID;
+
+import javax.persistence.LockModeType;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
+
+@NoRepositoryBean
+public interface LycorisPsqlRepository<I, C> extends Repository<C, UUID> {
+
+  public List<I> findAll();
+
+  public Page<I> findAll(Pageable pageable);
+  
+  public List<I> findAll(Sort sort);
+
+  public I findById(UUID id);
+
+  public default C findForSaveById(UUID id) {
+    this.createAdvisoryLock(generateLong(id));
+    return this.findForUpdateById(id);
+  }
+
+  @Lock(LockModeType.PESSIMISTIC_WRITE)
+  public C findForUpdateById(UUID id);
+
+  public default long generateLong(UUID id) {
+    final ByteBuffer buffer = ByteBuffer.wrap(new byte[16]);
+    buffer.putLong(id.getLeastSignificantBits());
+    buffer.putLong(id.getMostSignificantBits());
+
+    final BigInteger bi = new BigInteger(buffer.array());
+    return Math.abs(bi.longValue());
+  }
+
+  @Modifying
+  public C save(C project);
+
+  @Query(value = "select cast(pg_advisory_xact_lock(:id) as varchar)", nativeQuery = true)
+  void createAdvisoryLock(@Param("id") Long id);
+}
