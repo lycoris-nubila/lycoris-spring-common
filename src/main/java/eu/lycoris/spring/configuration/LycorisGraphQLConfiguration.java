@@ -9,7 +9,6 @@ import eu.lycoris.spring.graphql.LycorisGraphQLFetchExceptionHandler;
 import graphql.GraphQL;
 import graphql.execution.AsyncExecutionStrategy;
 import graphql.schema.GraphQLSchema;
-import io.leangen.graphql.spqr.spring.autoconfigure.DefaultGlobalContext;
 import io.leangen.graphql.spqr.spring.autoconfigure.ServletContextFactory;
 
 @Configuration
@@ -17,13 +16,7 @@ public class LycorisGraphQLConfiguration {
 
   @Bean
   public ServletContextFactory globalContextFactory() {
-    return params -> {
-      DefaultGlobalContext<?> context = new DefaultGlobalContext<>(params.getNativeRequest());
-      if (SecurityContextHolder.getContext().getAuthentication() != null) {
-        context.setExtension("auth", SecurityContextHolder.getContext().getAuthentication());
-      }
-      return context;
-    };
+    return params -> SecurityContextHolder.getContext().getAuthentication();
   }
 
   @Bean
