@@ -10,18 +10,10 @@ import java.lang.annotation.Target;
 import org.springframework.context.annotation.Import;
 
 import eu.lycoris.spring.configuration.LycorisWebConfiguration;
-import eu.lycoris.spring.web.LycorisControllerAdvice;
-import eu.lycoris.spring.web.LycorisWebMvcConfigurer;
-import eu.lycoris.spring.web.LycorisWebSecurityConfigurerAdapter;
 
 @Documented
 @Retention(RUNTIME)
 @Target(TYPE)
 @EnableLycoris
-@Import({
-  LycorisWebConfiguration.class,
-  LycorisWebMvcConfigurer.class,
-  LycorisWebSecurityConfigurerAdapter.class,
-  LycorisControllerAdvice.class
-})
+@Import({LycorisWebConfiguration.class})
 public @interface EnableLycorisWeb {}
