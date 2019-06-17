@@ -1,12 +1,19 @@
 package eu.lycoris.spring.graphql;
 
 import static graphql.Assert.assertNotNull;
+import static eu.lycoris.spring.common.LycorisMessages.ERROR_WEB_REQUEST_CONSTRAINT_VIOLATION;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 
@@ -41,11 +48,33 @@ public class LycorisGraphQLFetchError implements GraphQLError {
   }
 
   private String mkMessage(Throwable exception, MessageSource messageSource) {
-    return messageSource.getMessage(
-        exception.getMessage(),
-        new Object[] {},
-        exception.getMessage(),
-        LocaleContextHolder.getLocale());
+    int violationExceptionIndex =
+        ExceptionUtils.indexOfThrowable(exception, ConstraintViolationException.class);
+    if (violationExceptionIndex >= 0) {
+      ConstraintViolationException violationException =
+          (ConstraintViolationException)
+              ExceptionUtils.getThrowables(exception)[violationExceptionIndex];
+
+      String fields =
+          violationException
+              .getConstraintViolations()
+              .stream()
+              .map(ConstraintViolation::getPropertyPath)
+              .map(Path::toString)
+              .collect(Collectors.joining(", "));
+
+      return messageSource.getMessage(
+          ERROR_WEB_REQUEST_CONSTRAINT_VIOLATION,
+          new Object[] {fields},
+          ERROR_WEB_REQUEST_CONSTRAINT_VIOLATION,
+          LocaleContextHolder.getLocale());
+    } else {
+      return messageSource.getMessage(
+          exception.getMessage(),
+          new Object[] {},
+          exception.getMessage(),
+          LocaleContextHolder.getLocale());
+    }
   }
 
   private Map<String, Object> mkExtensions(Throwable exception) {

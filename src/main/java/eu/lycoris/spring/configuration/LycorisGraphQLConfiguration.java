@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import eu.lycoris.spring.common.LycorisGraphQLContext;
 import eu.lycoris.spring.graphql.LycorisGraphQLFetchExceptionHandler;
 import graphql.GraphQL;
 import graphql.execution.AsyncExecutionStrategy;
@@ -18,7 +19,9 @@ public class LycorisGraphQLConfiguration {
 
   @Bean
   public ServletContextFactory globalContextFactory() {
-    return params -> SecurityContextHolder.getContext().getAuthentication();
+    return params ->
+        new LycorisGraphQLContext(
+            SecurityContextHolder.getContext().getAuthentication(), params.getNativeRequest());
   }
 
   @Bean
