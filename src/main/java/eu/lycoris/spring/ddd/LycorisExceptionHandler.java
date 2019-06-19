@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import eu.lycoris.spring.ddd.domain.DomainCommand;
+import eu.lycoris.spring.ddd.command.Command;
 
 @Component
 public class LycorisExceptionHandler implements AsyncUncaughtExceptionHandler {
@@ -16,8 +16,8 @@ public class LycorisExceptionHandler implements AsyncUncaughtExceptionHandler {
 
   @Override
   public void handleUncaughtException(Throwable ex, Method method, Object... params) {
-    if (params.length > 0 && params[0] instanceof DomainCommand) {
-      DomainCommand command = (DomainCommand) params[0];
+    if (params.length > 0 && params[0] instanceof Command) {
+      Command command = (Command) params[0];
       lycorisCommandBus.handleError(command, ex);
     }
   }

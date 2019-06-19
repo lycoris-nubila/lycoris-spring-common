@@ -11,7 +11,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import eu.lycoris.spring.ddd.domain.DomainCommand;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,7 +53,7 @@ public class FailedCommand {
   }
 
   public static FailedCommandBuilder builder(
-      String command, Class<? extends DomainCommand> commmandClass) {
+      String command, Class<? extends Command> commmandClass) {
     return new FailedCommandBuilder()
         .command(command)
         .commmandClass(commmandClass.getCanonicalName());

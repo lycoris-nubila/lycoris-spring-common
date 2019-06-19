@@ -21,9 +21,9 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import eu.lycoris.spring.ddd.command.Command;
 import eu.lycoris.spring.ddd.command.FailedCommand;
 import eu.lycoris.spring.ddd.command.FailedCommandRepository;
-import eu.lycoris.spring.ddd.domain.DomainCommand;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -44,16 +44,16 @@ public class LycorisCommandBus {
 
   @Autowired private FailedCommandRepository failedCommandRepository;
 
-  public <R extends DomainCommand, T> T run(R command) {
+  public <R extends Command, T> T run(R command) {
     return this.run(command, true);
   }
 
-  public <R extends DomainCommand, T> CompletableFuture<T> runAsync(R command) {
+  public <R extends Command, T> CompletableFuture<T> runAsync(R command) {
     return CompletableFuture.supplyAsync(() -> this.run(command), taskExecutor);
   }
 
   @SuppressWarnings("unchecked")
-  private <R extends DomainCommand, T> T run(R command, boolean handleError) {
+  private <R extends Command, T> T run(R command, boolean handleError) {
     try {
       List<Object> validBeans =
           listableBeanFactory
@@ -132,9 +132,9 @@ public class LycorisCommandBus {
       }
 
       try {
-        Class<? extends DomainCommand> clazz =
-            (Class<? extends DomainCommand>) Class.forName(failedCommand.getCommmandClass());
-        DomainCommand command = objectMapper.readValue(failedCommand.getCommand(), clazz);
+        Class<? extends Command> clazz =
+            (Class<? extends Command>) Class.forName(failedCommand.getCommmandClass());
+        Command command = objectMapper.readValue(failedCommand.getCommand(), clazz);
 
         this.run(command, false);
 
@@ -146,7 +146,7 @@ public class LycorisCommandBus {
     }
   }
 
-  <R extends DomainCommand> void handleError(R command, Throwable error) {
+  <R extends Command> void handleError(R command, Throwable error) {
     if (error != null && BooleanUtils.isTrue(command.isRetryable())) {
       try {
         failedCommandRepository.save(
