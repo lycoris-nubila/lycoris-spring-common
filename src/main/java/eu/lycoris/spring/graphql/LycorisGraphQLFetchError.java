@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
@@ -67,6 +68,12 @@ public class LycorisGraphQLFetchError implements GraphQLError {
           ERROR_WEB_REQUEST_CONSTRAINT_VIOLATION,
           new Object[] {fields},
           ERROR_WEB_REQUEST_CONSTRAINT_VIOLATION,
+          LocaleContextHolder.getLocale());
+    } else if (exception instanceof CompletionException) {
+      return messageSource.getMessage(
+          exception.getCause().getMessage(),
+          new Object[] {},
+          exception.getCause().getMessage(),
           LocaleContextHolder.getLocale());
     } else {
       return messageSource.getMessage(

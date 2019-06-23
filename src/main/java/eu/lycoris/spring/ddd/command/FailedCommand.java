@@ -11,6 +11,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,30 +19,27 @@ import lombok.ToString;
 
 @Getter
 @Entity
+@Builder
 @ToString(callSuper = true)
 @NoArgsConstructor(access = PROTECTED)
+@AllArgsConstructor(access = PROTECTED)
 public class FailedCommand {
 
   @Id private UUID id;
 
   @NotNull @NotEmpty private String command;
 
+  @NotNull @NotEmpty private String serviceClass;
+
   @NotNull @NotEmpty private String commmandClass;
+
+  @NotNull @NotEmpty private String serviceMethodName;
 
   @Min(0)
   @NotNull
   private Integer retryCount;
 
   private Instant nextRetryTime;
-
-  @Builder
-  protected FailedCommand(String command, String commmandClass) {
-    this.retryCount = 0;
-    this.command = command;
-    this.id = UUID.randomUUID();
-    this.commmandClass = commmandClass;
-    this.nextRetryTime = Instant.now();
-  }
 
   public void scheduleNextRetry(int maxRetry, int backoffMillisec) {
     if (retryCount < maxRetry) {
@@ -53,9 +51,17 @@ public class FailedCommand {
   }
 
   public static FailedCommandBuilder builder(
-      String command, Class<? extends Command> commmandClass) {
+      String command,
+      Class<? extends Command> commmandClass,
+      Class<?> serviceClass,
+      String serviceMethodName) {
     return new FailedCommandBuilder()
+        .retryCount(0)
         .command(command)
+        .id(UUID.randomUUID())
+        .nextRetryTime(Instant.now())
+        .serviceMethodName(serviceMethodName)
+        .serviceClass(serviceClass.getCanonicalName())
         .commmandClass(commmandClass.getCanonicalName());
   }
 }
