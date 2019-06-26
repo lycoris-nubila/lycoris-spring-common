@@ -3,6 +3,7 @@ package eu.lycoris.spring.common;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.persistence.LockModeType;
@@ -26,15 +27,15 @@ public interface LycorisPsqlRepository<I, C> extends Repository<C, UUID> {
   
   public List<I> findAll(Sort sort);
 
-  public I findById(UUID id);
+  public Optional<I> findById(UUID id);
 
-  public default C findForSaveById(UUID id) {
+  public default Optional<C> findForSaveById(UUID id) {
     this.createAdvisoryLock(generateLong(id));
     return this.findForUpdateById(id);
   }
 
   @Lock(LockModeType.PESSIMISTIC_WRITE)
-  public C findForUpdateById(UUID id);
+  public Optional<C> findForUpdateById(UUID id);
 
   public default long generateLong(UUID id) {
     final ByteBuffer buffer = ByteBuffer.wrap(new byte[16]);
@@ -46,7 +47,7 @@ public interface LycorisPsqlRepository<I, C> extends Repository<C, UUID> {
   }
 
   @Modifying
-  public C save(C project);
+  public Optional<C> save(C project);
 
   @Query(value = "select cast(pg_advisory_xact_lock(:id) as varchar)", nativeQuery = true)
   void createAdvisoryLock(@Param("id") Long id);

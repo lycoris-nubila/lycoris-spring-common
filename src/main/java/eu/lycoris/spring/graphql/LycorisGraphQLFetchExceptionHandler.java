@@ -26,6 +26,6 @@ public class LycorisGraphQLFetchExceptionHandler implements DataFetcherException
     LycorisGraphQLFetchError error =
         new LycorisGraphQLFetchError(messageSource, path, exception, sourceLocation);
     handlerParameters.getExecutionContext().addError(error);
-    log.debug(error.getMessage(), exception);
+    log.info(error.getMessage(), exception);
   }
 }
