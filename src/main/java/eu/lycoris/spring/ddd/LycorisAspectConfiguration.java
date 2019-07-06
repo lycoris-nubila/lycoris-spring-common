@@ -2,6 +2,7 @@ package eu.lycoris.spring.ddd;
 
 import java.util.Arrays;
 
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Aspect
 @Component
-public class LycorisCommandAspect {
+public class LycorisAspectConfiguration {
 
   @Autowired private LycorisCommandService lycorisCommandService;
 
@@ -57,5 +58,23 @@ public class LycorisCommandAspect {
       }
       throw e;
     }
+  }
+
+  @Around("@annotation(LycorisLogMethod)")
+  public Object logMethod(ProceedingJoinPoint joinPoint) throws Throwable {
+    log.info(
+        "Executing method {} with arguments {}",
+        joinPoint.getSignature().getName(),
+        StringUtils.join(joinPoint.getArgs(), ", "));
+
+    Object result = joinPoint.proceed();
+
+    log.info(
+        "Executed method {} with arguments {} returning {}",
+        joinPoint.getSignature().getName(),
+        StringUtils.join(joinPoint.getArgs(), ", "),
+        result);
+
+    return result;
   }
 }
