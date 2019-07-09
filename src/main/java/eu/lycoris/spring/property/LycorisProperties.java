@@ -36,6 +36,8 @@ public class LycorisProperties {
 
   private final AwsProperties secret = new AwsProperties();
 
+  private final AwsProperties s3 = new AwsProperties();
+  
   private final AwsProperties sns = new AwsProperties();
 
   private final AwsProperties sqs = new AwsProperties();
