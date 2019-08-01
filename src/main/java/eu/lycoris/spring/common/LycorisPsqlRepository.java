@@ -48,6 +48,9 @@ public interface LycorisPsqlRepository<I, C> extends Repository<C, UUID> {
 
   @Modifying
   public Optional<C> save(C entity);
+  
+  @Modifying
+  public List<C> saveAll(Iterable<C> entities);
 
   @Query(value = "select cast(pg_advisory_xact_lock(:id) as varchar)", nativeQuery = true)
   void createAdvisoryLock(@Param("id") Long id);
