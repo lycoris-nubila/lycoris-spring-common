@@ -1,4 +1,4 @@
-package eu.lycoris.spring.ddd;
+package eu.lycoris.spring.common;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

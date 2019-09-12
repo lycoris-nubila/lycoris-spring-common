@@ -2,6 +2,10 @@ package eu.lycoris.spring.configuration;
 
 import javax.validation.Validator;
 
+import org.apache.commons.lang3.StringUtils;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +22,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Aspect
 @Configuration
 public class LycorisConfiguration {
 
@@ -61,5 +69,23 @@ public class LycorisConfiguration {
     messageSource.setDefaultEncoding("UTF-8");
     messageSource.setCacheSeconds(3600);
     return messageSource;
+  }
+
+  @Around("@annotation(eu.lycoris.spring.common.LycorisLogMethod)")
+  public Object logMethod(ProceedingJoinPoint joinPoint) throws Throwable {
+    log.info(
+        "Executing method {} with arguments {}",
+        joinPoint.getSignature().getName(),
+        StringUtils.join(joinPoint.getArgs(), ", "));
+
+    Object result = joinPoint.proceed();
+
+    log.info(
+        "Executed method {} with arguments {} returning {}",
+        joinPoint.getSignature().getName(),
+        StringUtils.join(joinPoint.getArgs(), ", "),
+        result);
+
+    return result;
   }
 }
