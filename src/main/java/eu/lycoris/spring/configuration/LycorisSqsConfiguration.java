@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.handler.annotation.support.PayloadArgumentResolver;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -53,12 +52,10 @@ public class LycorisSqsConfiguration {
 
   @Bean
   public SimpleMessageListenerContainerFactory simpleMessageListenerContainerFactory(
-      AmazonSQSAsync amazonSqs,
-      QueueMessageHandler messageHandler,
-      ThreadPoolTaskExecutor executor) {
+      AmazonSQSAsync amazonSqs, QueueMessageHandler messageHandler, LycorisProperties properties) {
     SimpleMessageListenerContainerFactory factory = new SimpleMessageListenerContainerFactory();
+    factory.setMaxNumberOfMessages(properties.getSqs().getMaxNumberOfMessages());
     factory.setQueueMessageHandler(messageHandler);
-    factory.setTaskExecutor(executor);
     factory.setAmazonSqs(amazonSqs);
     factory.setAutoStartup(true);
     return factory;

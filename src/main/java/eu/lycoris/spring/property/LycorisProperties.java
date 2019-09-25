@@ -13,6 +13,7 @@ public class LycorisProperties {
   @Getter
   @Setter
   public static class AwsProperties {
+    private Integer maxNumberOfMessages;
     private String secretKey;
     private String accessKey;
     private String region;
@@ -37,7 +38,7 @@ public class LycorisProperties {
   private final AwsProperties secret = new AwsProperties();
 
   private final AwsProperties s3 = new AwsProperties();
-  
+
   private final AwsProperties sns = new AwsProperties();
 
   private final AwsProperties sqs = new AwsProperties();
