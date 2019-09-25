@@ -73,6 +73,7 @@ public class LycorisCommandRetryService {
             lycorisProperties.getCommandRetry().getMaxAttempts(),
             lycorisProperties.getCommandRetry().getBackoffMillisec());
         failedCommandRepository.save(failedCommand);
+        log.error("Retry failed", e);
       }
     }
   }
