@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import eu.lycoris.spring.common.LycorisSkipJwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -48,9 +49,10 @@ public class LycorisJwtHandlerInterceptor extends HandlerInterceptorAdapter {
 
     HandlerMethod handlerMethod = ((HandlerMethod) handler);
     Secured secured = handlerMethod.getMethodAnnotation(Secured.class);
+    LycorisSkipJwt skipJwt = handlerMethod.getMethodAnnotation(LycorisSkipJwt.class);
 
     String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-    if (authorization == null) {
+    if (authorization == null || skipJwt != null) {
       SecurityContextHolder.getContext().setAuthentication(null);
       return true;
     }
