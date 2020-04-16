@@ -24,7 +24,7 @@ public interface LycorisPsqlRepository<I, C> extends Repository<C, UUID> {
   public List<I> findAll();
 
   public Page<I> findAll(Pageable pageable);
-  
+
   public List<I> findAll(Sort sort);
 
   public Optional<I> findById(UUID id);
@@ -48,7 +48,9 @@ public interface LycorisPsqlRepository<I, C> extends Repository<C, UUID> {
 
   @Modifying
   public Optional<C> save(C entity);
-  
+
+  public void flush();
+
   @Modifying
   public List<C> saveAll(Iterable<C> entities);
 

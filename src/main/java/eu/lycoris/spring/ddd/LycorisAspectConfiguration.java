@@ -2,6 +2,9 @@ package eu.lycoris.spring.ddd;
 
 import java.util.Arrays;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,7 +19,16 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class LycorisAspectConfiguration {
 
+  @PersistenceContext private EntityManager entityManager;
+
   @Autowired private LycorisCommandService lycorisCommandService;
+
+  @Around("@annotation(LycorisFlushContext)")
+  public Object flushContext(ProceedingJoinPoint joinPoint) throws Throwable {
+    Object result = joinPoint.proceed();
+    entityManager.flush();
+    return result;
+  }
 
   @Around("@annotation(LycorisRetryCommand)")
   public Object saveCommandForRetry(ProceedingJoinPoint joinPoint) throws Throwable {
