@@ -61,4 +61,8 @@ public class DomainEntity<T> implements IDomainEntity<T> {
     this.domainEvents.add(event);
     return event;
   }
+
+  protected void forceUpdate() {
+    this.updateDateTime = Instant.now();
+  }
 }
