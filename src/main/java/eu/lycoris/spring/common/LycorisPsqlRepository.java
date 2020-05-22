@@ -49,6 +49,9 @@ public interface LycorisPsqlRepository<I, C> extends Repository<C, UUID> {
   @Modifying
   public Optional<C> save(C entity);
 
+  @Modifying
+  public Optional<C> saveAndFlush(C entity);
+
   public void flush();
 
   @Modifying
