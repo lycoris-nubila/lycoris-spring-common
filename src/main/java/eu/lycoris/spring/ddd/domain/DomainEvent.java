@@ -3,15 +3,15 @@ package eu.lycoris.spring.ddd.domain;
 import org.springframework.context.ApplicationEvent;
 
 @SuppressWarnings("serial")
-public class DomainEvent<U, T extends IDomainEntity<U>> extends ApplicationEvent {
+public class DomainEvent<I, D extends IDomainEntity<I>> extends ApplicationEvent {
 
-  public DomainEvent(T source) {
+  public DomainEvent(D source) {
     super(source);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public T getSource() {
-    return (T) super.getSource();
+  public D getSource() {
+    return (D) super.getSource();
   }
 }
