@@ -21,7 +21,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import eu.lycoris.spring.common.LycorisAuthenticationException;
 import graphql.ErrorType;
 import graphql.GraphQLError;
-import graphql.execution.ExecutionPath;
+import graphql.execution.ResultPath;
 import graphql.language.SourceLocation;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -39,7 +39,7 @@ public class LycorisGraphQLFetchError implements GraphQLError {
 
   public LycorisGraphQLFetchError(
       MessageSource messageSource,
-      ExecutionPath path,
+      ResultPath path,
       Throwable exception,
       SourceLocation sourceLocation) {
     this.path = assertNotNull(path).toList();

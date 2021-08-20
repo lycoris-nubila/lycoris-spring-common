@@ -4,8 +4,7 @@ import org.springframework.context.MessageSource;
 
 import graphql.execution.DataFetcherExceptionHandler;
 import graphql.execution.DataFetcherExceptionHandlerParameters;
-import graphql.execution.ExecutionPath;
-import graphql.language.SourceLocation;
+import graphql.execution.DataFetcherExceptionHandlerResult;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -18,14 +17,17 @@ public class LycorisGraphQLFetchExceptionHandler implements DataFetcherException
   }
 
   @Override
-  public void accept(DataFetcherExceptionHandlerParameters handlerParameters) {
-    Throwable exception = handlerParameters.getException();
-    SourceLocation sourceLocation = handlerParameters.getField().getSourceLocation();
-    ExecutionPath path = handlerParameters.getPath();
-
+  public DataFetcherExceptionHandlerResult onException(
+      DataFetcherExceptionHandlerParameters handlerParameters) {
     LycorisGraphQLFetchError error =
-        new LycorisGraphQLFetchError(messageSource, path, exception, sourceLocation);
-    handlerParameters.getExecutionContext().addError(error);
-    log.info(error.getMessage(), exception);
+        new LycorisGraphQLFetchError(
+            messageSource,
+            handlerParameters.getPath(),
+            handlerParameters.getException(),
+            handlerParameters.getSourceLocation());
+
+    log.info(error.getMessage(), handlerParameters.getException());
+
+    return DataFetcherExceptionHandlerResult.newResult().error(error).build();
   }
 }

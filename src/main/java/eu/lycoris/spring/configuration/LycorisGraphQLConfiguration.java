@@ -12,13 +12,13 @@ import graphql.execution.AsyncExecutionStrategy;
 import graphql.execution.AsyncSerialExecutionStrategy;
 import graphql.execution.SubscriptionExecutionStrategy;
 import graphql.schema.GraphQLSchema;
-import io.leangen.graphql.spqr.spring.autoconfigure.ServletContextFactory;
+import io.leangen.graphql.spqr.spring.autoconfigure.MvcContextFactory;
 
 @Configuration
 public class LycorisGraphQLConfiguration {
 
   @Bean
-  public ServletContextFactory globalContextFactory() {
+  public MvcContextFactory globalContextFactory() {
     return params ->
         new LycorisGraphQLContext(
             SecurityContextHolder.getContext().getAuthentication(), params.getNativeRequest());

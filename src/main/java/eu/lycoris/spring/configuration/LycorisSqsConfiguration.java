@@ -12,7 +12,7 @@ import org.springframework.cloud.aws.messaging.listener.SimpleMessageListenerCon
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
-import org.springframework.messaging.handler.annotation.support.PayloadArgumentResolver;
+import org.springframework.messaging.handler.annotation.support.PayloadMethodArgumentResolver;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -83,7 +83,7 @@ public class LycorisSqsConfiguration {
     QueueMessageHandlerFactory factory = new QueueMessageHandlerFactory();
     factory.setArgumentResolvers(
         Collections.<HandlerMethodArgumentResolver>singletonList(
-            new PayloadArgumentResolver(messageConverter(objectMapper))));
+            new PayloadMethodArgumentResolver(messageConverter(objectMapper))));
     factory.setSendToMessagingTemplate(queueMessagingTemplate);
     return factory;
   }

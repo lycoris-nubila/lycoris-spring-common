@@ -31,7 +31,7 @@ public class EventEntity<I> {
     return Collections.unmodifiableList(domainEvents);
   }
 
-  protected <D extends IDomainEntity<I>> DomainEvent<I, D> registerEvent(DomainEvent<I, D> event) {
+  protected <E> E registerEvent(E event) {
     Assert.notNull(event, "Domain event must not be null!");
     this.domainEvents.add(event);
     return event;
