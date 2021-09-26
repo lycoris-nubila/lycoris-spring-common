@@ -1,6 +1,6 @@
 package eu.lycoris.spring.configuration;
 
-import org.springframework.cloud.aws.core.config.AmazonWebserviceClientFactoryBean;
+import io.awspring.cloud.core.config.AmazonWebserviceClientFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,16 +16,16 @@ import eu.lycoris.spring.property.LycorisProperties;
 @Configuration
 public class LycorisSecretConfiguration {
 
-  @Bean(destroyMethod = "shutdown")
-  public AWSSecretsManager amazonSecret(LycorisProperties properties) throws Exception {
-    AmazonWebserviceClientFactoryBean<AWSSecretsManagerAsyncClient> clientFactoryBean =
-        new AmazonWebserviceClientFactoryBean<>(
-            AWSSecretsManagerAsyncClient.class,
-            new AWSStaticCredentialsProvider(
-                new BasicAWSCredentials(
-                    properties.getSecret().getAccessKey(), properties.getSecret().getSecretKey())),
-            () -> Region.getRegion(Regions.fromName(properties.getSecret().getRegion())));
-    clientFactoryBean.afterPropertiesSet();
-    return clientFactoryBean.getObject();
-  }
+    @Bean(destroyMethod = "shutdown")
+    public AWSSecretsManager amazonSecret(LycorisProperties properties) throws Exception {
+        AmazonWebserviceClientFactoryBean<AWSSecretsManagerAsyncClient> clientFactoryBean =
+                new AmazonWebserviceClientFactoryBean<>(
+                        AWSSecretsManagerAsyncClient.class,
+                        new AWSStaticCredentialsProvider(
+                                new BasicAWSCredentials(
+                                        properties.getSecret().getAccessKey(), properties.getSecret().getSecretKey())),
+                        () -> Region.getRegion(Regions.fromName(properties.getSecret().getRegion())));
+        clientFactoryBean.afterPropertiesSet();
+        return clientFactoryBean.getObject();
+    }
 }

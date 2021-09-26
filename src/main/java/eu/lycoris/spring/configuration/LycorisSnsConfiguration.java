@@ -1,6 +1,6 @@
 package eu.lycoris.spring.configuration;
 
-import org.springframework.cloud.aws.core.config.AmazonWebserviceClientFactoryBean;
+import io.awspring.cloud.core.config.AmazonWebserviceClientFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -18,16 +18,16 @@ import eu.lycoris.spring.property.LycorisProperties;
 @ComponentScan("eu.lycoris.spring.sns")
 public class LycorisSnsConfiguration {
 
-  @Bean(destroyMethod = "shutdown")
-  public AmazonSNS amazonSns(LycorisProperties properties) throws Exception {
-    AmazonWebserviceClientFactoryBean<AmazonSNSAsyncClient> clientFactoryBean =
-        new AmazonWebserviceClientFactoryBean<>(
-            AmazonSNSAsyncClient.class,
-            new AWSStaticCredentialsProvider(
-                new BasicAWSCredentials(
-                    properties.getSns().getAccessKey(), properties.getSns().getSecretKey())),
-            () -> Region.getRegion(Regions.fromName(properties.getSns().getRegion())));
-    clientFactoryBean.afterPropertiesSet();
-    return clientFactoryBean.getObject();
-  }
+    @Bean(destroyMethod = "shutdown")
+    public AmazonSNS amazonSns(LycorisProperties properties) throws Exception {
+        AmazonWebserviceClientFactoryBean<AmazonSNSAsyncClient> clientFactoryBean =
+                new AmazonWebserviceClientFactoryBean<>(
+                        AmazonSNSAsyncClient.class,
+                        new AWSStaticCredentialsProvider(
+                                new BasicAWSCredentials(
+                                        properties.getSns().getAccessKey(), properties.getSns().getSecretKey())),
+                        () -> Region.getRegion(Regions.fromName(properties.getSns().getRegion())));
+        clientFactoryBean.afterPropertiesSet();
+        return clientFactoryBean.getObject();
+    }
 }
