@@ -2,10 +2,13 @@ package eu.lycoris.spring.configuration;
 
 import javax.validation.Validator;
 
+import com.fasterxml.jackson.databind.ser.FilterProvider;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,11 +48,14 @@ public class LycorisConfiguration {
   }
 
   @Bean
-  public ObjectMapper objectMapper() {
+  public ObjectMapper objectMapper(@Autowired(required = false) FilterProvider filterProvider) {
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new Jdk8Module());
     mapper.registerModule(new JavaTimeModule());
     mapper.registerModule(new ParameterNamesModule());
+    if (filterProvider != null) {
+      mapper.setFilterProvider(filterProvider);
+    }
     mapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     return mapper;
