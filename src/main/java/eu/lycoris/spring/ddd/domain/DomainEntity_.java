@@ -11,10 +11,12 @@ import javax.persistence.metamodel.StaticMetamodel;
 public class DomainEntity_ {
 
   public static volatile SingularAttribute<DomainEntity<?>, ?> id;
+  public static volatile SingularAttribute<DomainEntity<?>, Long> version;
   public static volatile SingularAttribute<DomainEntity<?>, Instant> updateDateTime;
   public static volatile SingularAttribute<DomainEntity<?>, Instant> creationDateTime;
 
   public static final String ID = "id";
+  public static final String VERSION = "version";
   public static final String UPDATE_DATE_TIME = "updateDateTime";
   public static final String CREATION_DATE_TIME = "creationDateTime";
 }
