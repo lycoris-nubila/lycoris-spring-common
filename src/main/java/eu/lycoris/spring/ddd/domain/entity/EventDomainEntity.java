@@ -1,4 +1,4 @@
-package eu.lycoris.spring.ddd.domain;
+package eu.lycoris.spring.ddd.domain.entity;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -17,9 +17,9 @@ import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @NoArgsConstructor(access = PROTECTED)
-public class EventEntity<I> {
+public class EventDomainEntity<I, D extends IDomainEntity<I>> {
 
-  @Transient private final List<Object> domainEvents = new ArrayList<>();
+  @Transient private final List<DomainEntityEvent<I, D>> domainEvents = new ArrayList<>();
 
   @AfterDomainEventPublication
   protected void clearDomainEvents() {
@@ -31,7 +31,7 @@ public class EventEntity<I> {
     return Collections.unmodifiableList(domainEvents);
   }
 
-  protected <E> E registerEvent(E event) {
+  protected DomainEntityEvent<I, D> registerEvent(DomainEntityEvent<I, D> event) {
     Assert.notNull(event, "Domain event must not be null!");
     this.domainEvents.add(event);
     return event;

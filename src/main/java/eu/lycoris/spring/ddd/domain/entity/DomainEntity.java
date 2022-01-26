@@ -1,4 +1,4 @@
-package eu.lycoris.spring.ddd.domain;
+package eu.lycoris.spring.ddd.domain.entity;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -24,7 +24,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @RequiredArgsConstructor(access = PROTECTED)
 @TypeDef(defaultForType = String.class, typeClass = TextType.class)
-public class DomainEntity<I> extends EventEntity<I> implements IDomainEntity<I> {
+public class DomainEntity<I, D extends IDomainEntity<I>> extends EventDomainEntity<I, D>
+    implements IDomainEntity<I> {
 
   @Id @NotNull @NonNull private I id;
 

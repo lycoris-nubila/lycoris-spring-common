@@ -1,4 +1,4 @@
-package eu.lycoris.spring.ddd.domain;
+package eu.lycoris.spring.ddd.domain.entity;
 
 import java.time.Instant;
 

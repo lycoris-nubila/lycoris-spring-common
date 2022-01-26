@@ -1,11 +1,11 @@
-package eu.lycoris.spring.ddd.domain;
+package eu.lycoris.spring.ddd.domain.entity;
 
 import org.springframework.context.ApplicationEvent;
 
 @SuppressWarnings("serial")
-public class DomainEvent<I, D extends IDomainEntity<I>> extends ApplicationEvent {
+public class DomainEntityEvent<I, D extends IDomainEntity<I>> extends ApplicationEvent {
 
-  public DomainEvent(D source) {
+  public DomainEntityEvent(D source) {
     super(source);
   }
 
