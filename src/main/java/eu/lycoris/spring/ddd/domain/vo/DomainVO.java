@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.type.TextType;
 
-import javax.persistence.EmbeddedId;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -22,7 +22,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class DomainVO<I, D extends IDomainVO<I>> extends EventDomainVO<I, D>
     implements IDomainVO<I> {
 
-  @EmbeddedId @NotNull @NonNull private I id;
+  @Id @NotNull @NonNull private I id;
 
   @Version private Long version;
 }
