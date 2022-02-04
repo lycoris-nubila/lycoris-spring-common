@@ -1,10 +1,5 @@
 package eu.lycoris.spring.configuration;
 
-import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.context.SecurityContextHolder;
-
 import eu.lycoris.spring.common.LycorisGraphQLContext;
 import eu.lycoris.spring.graphql.LycorisGraphQLFetchExceptionHandler;
 import graphql.GraphQL;
@@ -13,6 +8,10 @@ import graphql.execution.AsyncSerialExecutionStrategy;
 import graphql.execution.SubscriptionExecutionStrategy;
 import graphql.schema.GraphQLSchema;
 import io.leangen.graphql.spqr.spring.autoconfigure.MvcContextFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Configuration
 public class LycorisGraphQLConfiguration {

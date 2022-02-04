@@ -1,17 +1,15 @@
 package eu.lycoris.spring.configuration;
 
-import org.springframework.cloud.aws.core.config.AmazonWebserviceClientFactoryBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerAsyncClient;
-
 import eu.lycoris.spring.property.LycorisProperties;
+import org.springframework.cloud.aws.core.config.AmazonWebserviceClientFactoryBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class LycorisSecretConfiguration {

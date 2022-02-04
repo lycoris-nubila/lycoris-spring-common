@@ -2,9 +2,9 @@ package eu.lycoris.spring.ddd.domain.entity;
 
 import java.time.Instant;
 
-public interface IDomainEntity<T> {
+public interface IDomainEntity<I> {
 
-  T getId();
+  I getId();
 
   Long getVersion();
 

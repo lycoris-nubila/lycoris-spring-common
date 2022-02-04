@@ -1,21 +1,19 @@
-package eu.lycoris.spring.ddd.domain.entity;
+package eu.lycoris.spring.ddd.domain.entity.event;
 
-import static lombok.AccessLevel.PROTECTED;
+import eu.lycoris.spring.ddd.domain.entity.IDomainEntity;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.AfterDomainEventPublication;
+import org.springframework.data.domain.DomainEvents;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.domain.AfterDomainEventPublication;
-import org.springframework.data.domain.DomainEvents;
-import org.springframework.util.Assert;
+import static lombok.AccessLevel.PROTECTED;
 
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-
-@SuperBuilder
 @NoArgsConstructor(access = PROTECTED)
 public class EventDomainEntity<I, D extends IDomainEntity<I>> {
 

@@ -1,24 +1,14 @@
 package eu.lycoris.spring.configuration;
 
-import static eu.lycoris.spring.common.LycorisMessages.ERROR_WEB_REQUEST_AUTHENTICATION_ERROR;
-import static eu.lycoris.spring.common.LycorisMessages.ERROR_WEB_REQUEST_INTERNAL_ERROR;
-import static eu.lycoris.spring.common.LycorisMessages.ERROR_WEB_REQUEST_INVALID_BODY;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.fasterxml.classmate.TypeResolver;
+import eu.lycoris.spring.common.LycorisErrorDto;
+import eu.lycoris.spring.property.LycorisProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import com.fasterxml.classmate.TypeResolver;
-
-import eu.lycoris.spring.common.LycorisErrorDto;
-import eu.lycoris.spring.property.LycorisProperties;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
@@ -28,6 +18,12 @@ import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static eu.lycoris.spring.common.LycorisMessages.*;
 
 @Configuration
 @EnableSwagger2

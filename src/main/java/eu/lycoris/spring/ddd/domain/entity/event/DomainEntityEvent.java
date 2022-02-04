@@ -1,8 +1,8 @@
-package eu.lycoris.spring.ddd.domain.entity;
+package eu.lycoris.spring.ddd.domain.entity.event;
 
+import eu.lycoris.spring.ddd.domain.entity.IDomainEntity;
 import org.springframework.context.ApplicationEvent;
 
-@SuppressWarnings("serial")
 public class DomainEntityEvent<I, D extends IDomainEntity<I>> extends ApplicationEvent {
 
   public DomainEntityEvent(D source) {

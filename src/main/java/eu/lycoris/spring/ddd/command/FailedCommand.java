@@ -1,21 +1,16 @@
 package eu.lycoris.spring.ddd.command;
 
-import static lombok.AccessLevel.PROTECTED;
-
-import java.time.Instant;
-import java.util.UUID;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
+import java.util.UUID;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @Entity

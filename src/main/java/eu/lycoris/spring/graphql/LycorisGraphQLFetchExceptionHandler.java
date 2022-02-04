@@ -1,11 +1,10 @@
 package eu.lycoris.spring.graphql;
 
-import org.springframework.context.MessageSource;
-
 import graphql.execution.DataFetcherExceptionHandler;
 import graphql.execution.DataFetcherExceptionHandlerParameters;
 import graphql.execution.DataFetcherExceptionHandlerResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 
 @Slf4j
 public class LycorisGraphQLFetchExceptionHandler implements DataFetcherExceptionHandler {

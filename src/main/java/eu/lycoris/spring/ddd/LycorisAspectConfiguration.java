@@ -1,18 +1,16 @@
 package eu.lycoris.spring.ddd;
 
-import java.util.Arrays;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import eu.lycoris.spring.ddd.command.Command;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import eu.lycoris.spring.ddd.command.Command;
-import lombok.extern.slf4j.Slf4j;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.Arrays;
 
 @Slf4j
 @Aspect

@@ -1,12 +1,6 @@
 package eu.lycoris.spring.web;
 
-import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import eu.lycoris.spring.common.LycorisCorsHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,7 +9,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import eu.lycoris.spring.common.LycorisCorsHeader;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 @EnableWebSecurity
 public class LycorisWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
