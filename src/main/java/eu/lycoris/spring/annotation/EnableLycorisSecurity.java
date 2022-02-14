@@ -1,6 +1,6 @@
 package eu.lycoris.spring.annotation;
 
-import eu.lycoris.spring.configuration.LycorisSecurityExceptionFilterConfiguration;
+import eu.lycoris.spring.configuration.LycorisSecurityConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.Documented;
@@ -14,5 +14,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(TYPE)
 @Documented
 @EnableLycoris
-@Import({LycorisSecurityExceptionFilterConfiguration.class})
-public @interface EnableLycorisSecurityExceptionFilter {}
+@Import({LycorisSecurityConfiguration.class})
+public @interface EnableLycorisSecurity {}

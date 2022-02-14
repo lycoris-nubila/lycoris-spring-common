@@ -5,4 +5,4 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan("eu.lycoris.spring.security")
-public class LycorisSecurityExceptionFilterConfiguration {}
+public class LycorisSecurityConfiguration {}
