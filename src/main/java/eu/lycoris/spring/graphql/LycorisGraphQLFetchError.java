@@ -1,5 +1,6 @@
 package eu.lycoris.spring.graphql;
 
+import eu.lycoris.spring.common.LycorisApplicationException;
 import eu.lycoris.spring.common.LycorisAuthenticationException;
 import graphql.ErrorType;
 import graphql.GraphQLError;
@@ -69,10 +70,15 @@ public class LycorisGraphQLFetchError implements GraphQLError {
           LocaleContextHolder.getLocale());
     } else if (exception instanceof UndeclaredThrowableException) {
       UndeclaredThrowableException ute = ((UndeclaredThrowableException) exception);
+      exception =
+          ute.getUndeclaredThrowable().getCause() instanceof LycorisApplicationException
+              ? ute.getUndeclaredThrowable().getCause()
+              : ute.getUndeclaredThrowable();
+
       return messageSource.getMessage(
-          ute.getUndeclaredThrowable().getMessage(),
+          exception.getMessage(),
           new Object[] {},
-          ute.getUndeclaredThrowable().getMessage(),
+          exception.getMessage(),
           LocaleContextHolder.getLocale());
     } else if (exception instanceof CompletionException) {
       return messageSource.getMessage(
@@ -93,7 +99,11 @@ public class LycorisGraphQLFetchError implements GraphQLError {
     Map<String, Object> ext = new HashMap<>();
 
     if (exception instanceof UndeclaredThrowableException) {
-      exception = ((UndeclaredThrowableException) exception).getUndeclaredThrowable();
+      UndeclaredThrowableException ute = ((UndeclaredThrowableException) exception);
+      exception =
+          ute.getUndeclaredThrowable().getCause() instanceof LycorisApplicationException
+              ? ute.getUndeclaredThrowable().getCause()
+              : ute.getUndeclaredThrowable();
     } else if (exception instanceof CompletionException) {
       exception = exception.getCause();
     }
