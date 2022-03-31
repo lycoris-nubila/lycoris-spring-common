@@ -8,12 +8,14 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import eu.lycoris.spring.cache.JwtIdKeyGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +30,11 @@ import javax.validation.Validator;
 @Aspect
 @Configuration
 public class LycorisConfiguration {
+
+  @Bean("jwtIdKeyGenerator")
+  public KeyGenerator keyGenerator() {
+    return new JwtIdKeyGenerator();
+  }
 
   @Bean
   public MethodValidationPostProcessor methodValidationPostProcessor(Validator validator) {
