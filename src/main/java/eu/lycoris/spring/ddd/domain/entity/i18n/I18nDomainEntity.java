@@ -38,4 +38,8 @@ public abstract class I18nDomainEntity<I, D extends IDomainEntity<I>, L extends 
 
     this.forceUpdate();
   }
+
+  public I18nDomainEntity(I id) {
+    super(id);
+  }
 }
