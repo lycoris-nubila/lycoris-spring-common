@@ -29,7 +29,9 @@ public class DomainEntity<I, D extends IDomainEntity<I>> extends EventDomainEnti
 
   @Id @NotNull @NonNull private I id;
 
-  @Version private Long version;
+  @Version
+  @Column(columnDefinition = "bigint default 0")
+  private Long version;
 
   @UpdateTimestamp private Instant updateDateTime;
 

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.type.TextType;
 
+import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
@@ -24,5 +25,7 @@ public class DomainVO<I, D extends IDomainVO<I>> extends EventDomainVO<I, D>
 
   @Id @NotNull @NonNull private I id;
 
-  @Version private Long version;
+  @Version
+  @Column(columnDefinition = "bigint default 0")
+  private Long version;
 }
