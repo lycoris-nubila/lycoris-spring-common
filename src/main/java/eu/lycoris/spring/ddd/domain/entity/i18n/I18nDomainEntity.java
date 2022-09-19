@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -18,10 +20,11 @@ import static lombok.AccessLevel.PROTECTED;
 @MappedSuperclass
 @Setter(PROTECTED)
 @NoArgsConstructor(access = PROTECTED)
-public abstract class I18nDomainEntity<I, D extends IDomainEntity<I>, L extends I18n<I, D, L>>
+public abstract class I18nDomainEntity<
+        I extends Serializable, D extends IDomainEntity<I>, L extends I18n<I, D, L>>
     extends DomainEntity<I, D> {
 
-  protected abstract List<L> getMutableLocalizations();
+  protected abstract @NotNull List<L> getMutableLocalizations();
 
   protected void updateLocalizations(List<L> localizations) {
     Map<String, L> localizationsMap =
@@ -39,7 +42,7 @@ public abstract class I18nDomainEntity<I, D extends IDomainEntity<I>, L extends 
     this.forceUpdate();
   }
 
-  public I18nDomainEntity(I id) {
+  public I18nDomainEntity(@NotNull I id) {
     super(id);
   }
 }

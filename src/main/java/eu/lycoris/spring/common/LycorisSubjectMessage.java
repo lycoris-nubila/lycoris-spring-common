@@ -1,6 +1,9 @@
 package eu.lycoris.spring.common;
 
+import javax.validation.constraints.NotNull;
+
 public interface LycorisSubjectMessage {
 
-  public String getSubject();
+  @NotNull
+  String getSubject();
 }

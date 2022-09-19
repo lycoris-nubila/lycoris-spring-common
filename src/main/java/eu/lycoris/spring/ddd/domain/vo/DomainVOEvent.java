@@ -1,16 +1,14 @@
 package eu.lycoris.spring.ddd.domain.vo;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
-public class DomainVOEvent<I, D extends IDomainVO<I>> extends ApplicationEvent {
+import javax.validation.constraints.NotNull;
 
-  public DomainVOEvent(D source) {
-    super(source);
-  }
+@Getter
+@AllArgsConstructor
+public class DomainVOEvent<I> {
 
-  @Override
-  @SuppressWarnings("unchecked")
-  public D getSource() {
-    return (D) super.getSource();
-  }
+  @NotNull private final I entityId;
 }

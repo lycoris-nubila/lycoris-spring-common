@@ -10,6 +10,8 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import javax.validation.constraints.NotNull;
+
 @Configuration
 @Import({
   LycorisWebMvcConfigurer.class,
@@ -18,12 +20,12 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 })
 public class LycorisWebConfiguration {
   @Bean
-  public LocaleResolver localeResolver() {
+  public @NotNull LocaleResolver localeResolver() {
     return new SessionLocaleResolver();
   }
 
   @Bean
-  public LocaleChangeInterceptor localeChangeInterceptor() {
+  public @NotNull LocaleChangeInterceptor localeChangeInterceptor() {
     LocaleChangeInterceptor changeInterceptor = new LocaleChangeInterceptor();
     changeInterceptor.setParamName("lang");
     return changeInterceptor;

@@ -19,6 +19,8 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,18 +31,19 @@ import static eu.lycoris.spring.common.LycorisMessages.*;
 @EnableSwagger2
 public class LycorisSwaggerConfiguration {
 
-  @Autowired private MessageSource messageSource;
+  private final @NotNull MessageSource messageSource;
 
-  private TypeResolver typeResolver;
+  private final @NotNull TypeResolver typeResolver;
 
-  public LycorisSwaggerConfiguration() {
+  public LycorisSwaggerConfiguration(@NotNull MessageSource messageSource) {
     this.typeResolver = new TypeResolver();
+    this.messageSource = messageSource;
   }
 
   @Bean
-  public Docket api(
+  public @NotNull Docket api(
       @Autowired LycorisProperties properties,
-      @Autowired(required = false) List<SecurityScheme> securitySchemes) {
+      @Autowired(required = false) @Nullable List<SecurityScheme> securitySchemes) {
     return new Docket(DocumentationType.SWAGGER_2)
         .select()
         .apis(
@@ -51,7 +54,7 @@ public class LycorisSwaggerConfiguration {
         .build()
         .securitySchemes(securitySchemes)
         .useDefaultResponseMessages(false)
-        .additionalModels(typeResolver.resolve(LycorisErrorDto.class))
+        .additionalModels(this.typeResolver.resolve(LycorisErrorDto.class))
         .globalResponseMessage(RequestMethod.GET, globalResponseMessageForRead())
         .globalResponseMessage(RequestMethod.POST, globalResponseMessageForWrite())
         .globalResponseMessage(RequestMethod.PATCH, globalResponseMessageForWrite())
@@ -65,7 +68,7 @@ public class LycorisSwaggerConfiguration {
                 .code(500)
                 .responseModel(new ModelRef(LycorisErrorDto.class.getSimpleName()))
                 .message(
-                    messageSource.getMessage(
+                    this.messageSource.getMessage(
                         ERROR_WEB_REQUEST_INTERNAL_ERROR,
                         null,
                         "Unexpected internal server error",
@@ -75,7 +78,7 @@ public class LycorisSwaggerConfiguration {
                 .code(401)
                 .responseModel(new ModelRef(LycorisErrorDto.class.getSimpleName()))
                 .message(
-                    messageSource.getMessage(
+                    this.messageSource.getMessage(
                         ERROR_WEB_REQUEST_AUTHENTICATION_ERROR,
                         null,
                         "Invalid access token or insufficient right",
@@ -90,7 +93,7 @@ public class LycorisSwaggerConfiguration {
             .code(400)
             .responseModel(new ModelRef(LycorisErrorDto.class.getSimpleName()))
             .message(
-                messageSource.getMessage(
+                this.messageSource.getMessage(
                     ERROR_WEB_REQUEST_INVALID_BODY,
                     null,
                     "Invalid request body",

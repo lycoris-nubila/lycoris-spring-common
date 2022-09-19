@@ -10,24 +10,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.aws.messaging.core.NotificationMessagingTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
 import java.nio.charset.StandardCharsets;
 
 @Component
 public class LycorisSnsManager extends SnsMessageManager {
 
-  private NotificationMessagingTemplate notifier;
+  private final @NotNull NotificationMessagingTemplate notifier;
 
   @Autowired
-  public LycorisSnsManager(LycorisProperties properties, AmazonSNS amazonSns) {
+  public LycorisSnsManager(LycorisProperties properties, @NotNull AmazonSNS amazonSns) {
     super(properties.getSns().getRegion());
     this.notifier = new NotificationMessagingTemplate(amazonSns);
   }
 
-  public void sendMessage(String snsTopic, LycorisSubjectMessage message) {
-    notifier.sendNotification(snsTopic, message, message.getSubject());
+  public void sendMessage(@NotNull String snsTopic, @NotNull LycorisSubjectMessage message) {
+    this.notifier.sendNotification(snsTopic, message, message.getSubject());
   }
 
-  public void handleMessage(String messageBody, SnsMessageHandler handler) {
+  public void handleMessage(@NotNull String messageBody, @NotNull SnsMessageHandler handler) {
     parseMessage(IOUtils.toInputStream(messageBody, StandardCharsets.UTF_8)).handle(handler);
   }
 }

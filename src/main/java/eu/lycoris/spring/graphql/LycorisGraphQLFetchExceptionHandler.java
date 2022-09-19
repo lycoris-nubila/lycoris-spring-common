@@ -6,21 +6,23 @@ import graphql.execution.DataFetcherExceptionHandlerResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 
+import javax.validation.constraints.NotNull;
+
 @Slf4j
 public class LycorisGraphQLFetchExceptionHandler implements DataFetcherExceptionHandler {
 
-  private final MessageSource messageSource;
+  private final @NotNull MessageSource messageSource;
 
-  public LycorisGraphQLFetchExceptionHandler(MessageSource messageSource) {
+  public LycorisGraphQLFetchExceptionHandler(@NotNull MessageSource messageSource) {
     this.messageSource = messageSource;
   }
 
   @Override
-  public DataFetcherExceptionHandlerResult onException(
+  public @NotNull DataFetcherExceptionHandlerResult onException(
       DataFetcherExceptionHandlerParameters handlerParameters) {
     LycorisGraphQLFetchError error =
         new LycorisGraphQLFetchError(
-            messageSource,
+            this.messageSource,
             handlerParameters.getPath(),
             handlerParameters.getException(),
             handlerParameters.getSourceLocation());

@@ -13,18 +13,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import javax.validation.constraints.NotNull;
+
 @Configuration
 public class LycorisGraphQLConfiguration {
 
   @Bean
-  public MvcContextFactory globalContextFactory() {
+  public @NotNull MvcContextFactory globalContextFactory() {
     return params ->
         new LycorisGraphQLContext(
             SecurityContextHolder.getContext().getAuthentication(), params.getNativeRequest());
   }
 
   @Bean
-  public GraphQL graphQL(GraphQLSchema graphQLSchema, MessageSource messageSource) {
+  public @NotNull GraphQL graphQL(
+      @NotNull GraphQLSchema graphQLSchema, @NotNull MessageSource messageSource) {
     LycorisGraphQLFetchExceptionHandler fetchExceptionHandler =
         new LycorisGraphQLFetchExceptionHandler(messageSource);
     return GraphQL.newGraphQL(graphQLSchema)

@@ -11,11 +11,14 @@ import org.springframework.cloud.aws.core.config.AmazonWebserviceClientFactoryBe
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
+
 @Configuration
 public class LycorisS3Configuration {
 
   @Bean(destroyMethod = "shutdown")
-  public AmazonS3 amazonS3(LycorisProperties properties) throws Exception {
+  public @Nullable AmazonS3 amazonS3(LycorisProperties properties) throws Exception {
     AmazonWebserviceClientFactoryBean<AmazonS3Client> clientFactoryBean =
         new AmazonWebserviceClientFactoryBean<>(
             AmazonS3Client.class,

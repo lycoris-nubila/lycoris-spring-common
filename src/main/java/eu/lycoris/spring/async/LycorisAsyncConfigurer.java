@@ -6,23 +6,30 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import javax.validation.constraints.NotNull;
 import java.util.concurrent.Executor;
 
 @Configuration
 public class LycorisAsyncConfigurer implements AsyncConfigurer {
 
-  @Autowired ThreadPoolTaskExecutor taskExecutor;
+  private final @NotNull ThreadPoolTaskExecutor taskExecutor;
 
-  @Autowired(required = false)
-  private AsyncUncaughtExceptionHandler exceptionHandler;
+  private final @NotNull AsyncUncaughtExceptionHandler exceptionHandler;
+
+  public LycorisAsyncConfigurer(
+      @NotNull ThreadPoolTaskExecutor taskExecutor,
+      @NotNull AsyncUncaughtExceptionHandler exceptionHandler) {
+    this.taskExecutor = taskExecutor;
+    this.exceptionHandler = exceptionHandler;
+  }
 
   @Override
   public Executor getAsyncExecutor() {
-    return taskExecutor;
+    return this.taskExecutor;
   }
 
   @Override
   public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-    return exceptionHandler;
+    return this.exceptionHandler;
   }
 }

@@ -12,12 +12,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Nullable;
+
 @Configuration
 @ComponentScan("eu.lycoris.spring.sns")
 public class LycorisSnsConfiguration {
 
   @Bean(destroyMethod = "shutdown")
-  public AmazonSNS amazonSns(LycorisProperties properties) throws Exception {
+  public @Nullable AmazonSNS amazonSns(LycorisProperties properties) throws Exception {
     AmazonWebserviceClientFactoryBean<AmazonSNSAsyncClient> clientFactoryBean =
         new AmazonWebserviceClientFactoryBean<>(
             AmazonSNSAsyncClient.class,

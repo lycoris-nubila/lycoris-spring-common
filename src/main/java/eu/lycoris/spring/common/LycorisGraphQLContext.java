@@ -5,11 +5,13 @@ import lombok.Getter;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @AllArgsConstructor
 public class LycorisGraphQLContext {
 
-  private Authentication authentication;
+  private @NotNull Authentication authentication;
 
-  private NativeWebRequest request;
+  private @NotNull NativeWebRequest request;
 }

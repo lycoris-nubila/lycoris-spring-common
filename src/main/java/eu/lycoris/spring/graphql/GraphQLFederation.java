@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -18,9 +19,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GraphQLFederation {
   public static GraphQLSchema createFederatedSchema(
-      GraphQLSchema schema,
-      BiFunction<DataFetchingEnvironment, Map<String, Object>, Object> lookup,
-      TypeResolver resolve) {
+      @NotNull GraphQLSchema schema,
+      @NotNull BiFunction<DataFetchingEnvironment, Map<String, Object>, Object> lookup,
+      @NotNull TypeResolver resolve) {
     GraphQLScalarType unrepresentableScalar = (GraphQLScalarType) schema.getType("UNREPRESENTABLE");
 
     GraphQLDirective mappedTypeDirective =
@@ -73,7 +74,7 @@ public class GraphQLFederation {
     return implementLookupAndResolve(schemaWithDirectives, lookup, resolve);
   }
 
-  public static void printSchema(GraphQLSchema schema) {
+  public static void printSchema(@NotNull GraphQLSchema schema) {
     String printedSchema =
         new SchemaPrinter(SchemaPrinter.Options.defaultOptions().includeDirectives(true))
             .print(schema);
@@ -81,14 +82,13 @@ public class GraphQLFederation {
   }
 
   private static GraphQLSchema implementLookupAndResolve(
-      GraphQLSchema schema,
-      BiFunction<DataFetchingEnvironment, Map<String, Object>, Object> lookup,
-      TypeResolver resolve) {
+      @NotNull GraphQLSchema schema,
+      @NotNull BiFunction<DataFetchingEnvironment, Map<String, Object>, Object> lookup,
+      @NotNull TypeResolver resolve) {
     return Federation.transform(schema)
         .fetchEntities(
             env ->
-                env.<List<Map<String, Object>>>getArgument(_Entity.argumentName)
-                    .stream()
+                env.<List<Map<String, Object>>>getArgument(_Entity.argumentName).stream()
                     .map(values -> lookup.apply(env, values))
                     .collect(Collectors.toList()))
         .resolveEntityType(resolve)

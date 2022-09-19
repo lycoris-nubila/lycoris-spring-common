@@ -8,6 +8,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -23,7 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class LycorisSecurityExceptionFilter extends GenericFilterBean {
   @Override
-  public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
+  public void doFilter(
+      @NotNull ServletRequest req, @NotNull ServletResponse res, @NotNull FilterChain chain)
       throws IOException, ServletException {
     try {
       chain.doFilter(req, res);

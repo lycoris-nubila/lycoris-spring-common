@@ -8,8 +8,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 
 @Slf4j
@@ -17,17 +19,23 @@ import java.util.Arrays;
 @Component
 public class LycorisAspectConfiguration {
 
-  @PersistenceContext private EntityManager entityManager;
+  @PersistenceContext private @NotNull EntityManager entityManager;
 
-  @Autowired private LycorisCommandService lycorisCommandService;
+  private final @NotNull LycorisCommandService lycorisCommandService;
 
+  public LycorisAspectConfiguration(@NotNull LycorisCommandService lycorisCommandService) {
+    this.lycorisCommandService = lycorisCommandService;
+  }
+
+  @Nullable
   @Around("@annotation(LycorisFlushContext)")
   public Object flushContext(ProceedingJoinPoint joinPoint) throws Throwable {
     Object result = joinPoint.proceed();
-    entityManager.flush();
+    this.entityManager.flush();
     return result;
   }
 
+  @Nullable
   @Around("@annotation(LycorisRetryCommand)")
   public Object saveCommandForRetry(ProceedingJoinPoint joinPoint) throws Throwable {
     if (joinPoint.getArgs().length != 1) {
@@ -40,8 +48,7 @@ public class LycorisAspectConfiguration {
     }
 
     boolean isFromRetryService =
-        Arrays.asList(Thread.currentThread().getStackTrace())
-            .stream()
+        Arrays.stream(Thread.currentThread().getStackTrace())
             .anyMatch(
                 stackTrace ->
                     stackTrace
@@ -60,7 +67,7 @@ public class LycorisAspectConfiguration {
       return result;
     } catch (Exception e) {
       if (!isFromRetryService) {
-        lycorisCommandService.saveCommand(
+        this.lycorisCommandService.saveCommand(
             command,
             joinPoint.getSignature().getDeclaringType(),
             joinPoint.getSignature().getName());

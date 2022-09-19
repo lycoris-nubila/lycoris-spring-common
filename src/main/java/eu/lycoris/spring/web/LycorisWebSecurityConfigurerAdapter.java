@@ -9,7 +9,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
@@ -19,8 +21,11 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 public class LycorisWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
     implements CorsConfigurationSource {
 
-  @Autowired(required = false)
-  private List<LycorisCorsHeader> corsHeaders;
+  private final @Nullable List<LycorisCorsHeader> corsHeaders;
+
+  public LycorisWebSecurityConfigurerAdapter(@Nullable List<LycorisCorsHeader> corsHeaders) {
+    this.corsHeaders = corsHeaders;
+  }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -34,8 +39,9 @@ public class LycorisWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
         .cacheControl();
   }
 
+  @NotNull
   @Override
-  public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+  public CorsConfiguration getCorsConfiguration(@NotNull HttpServletRequest request) {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.addExposedHeader(CONTENT_DISPOSITION);
     configuration.addAllowedMethod(HttpMethod.OPTIONS);
@@ -47,14 +53,12 @@ public class LycorisWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
     configuration.addAllowedHeader(CONTENT_TYPE);
     configuration.addAllowedOrigin("*");
 
-    if (corsHeaders != null) {
-      corsHeaders
-          .stream()
+    if (this.corsHeaders != null) {
+      this.corsHeaders.stream()
           .filter(LycorisCorsHeader::isAllowed)
           .map(LycorisCorsHeader::getName)
           .forEach(configuration::addAllowedHeader);
-      corsHeaders
-          .stream()
+      this.corsHeaders.stream()
           .filter(LycorisCorsHeader::isExposed)
           .map(LycorisCorsHeader::getName)
           .forEach(configuration::addExposedHeader);

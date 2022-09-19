@@ -1,13 +1,14 @@
 package eu.lycoris.spring.common;
 
-@SuppressWarnings("serial")
+import javax.validation.constraints.NotNull;
+
 public class LycorisAuthenticationException extends LycorisApplicationException {
 
-  public LycorisAuthenticationException(String messageKey) {
+  public LycorisAuthenticationException(@NotNull String messageKey) {
     super(messageKey);
   }
 
-  public LycorisAuthenticationException(String messageKey, Throwable cause) {
+  public LycorisAuthenticationException(@NotNull String messageKey, @NotNull Throwable cause) {
     super(messageKey, cause);
   }
 }

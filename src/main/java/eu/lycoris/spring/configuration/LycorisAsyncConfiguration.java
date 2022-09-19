@@ -8,6 +8,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
+import javax.validation.constraints.NotNull;
+
 @EnableAsync
 @Configuration
 @EnableScheduling
@@ -15,7 +17,7 @@ public class LycorisAsyncConfiguration {
 
   @Bean
   @Primary
-  public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
+  public @NotNull ThreadPoolTaskExecutor threadPoolTaskExecutor() {
     ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
     executor.setWaitForTasksToCompleteOnShutdown(true);
     executor.setThreadNamePrefix("Lycoris-Async-");
@@ -28,7 +30,7 @@ public class LycorisAsyncConfiguration {
   }
 
   @Bean
-  public ThreadPoolTaskScheduler taskScheduler() {
+  public @NotNull ThreadPoolTaskScheduler taskScheduler() {
     ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
     threadPoolTaskScheduler.setThreadNamePrefix("Lycoris-Schedule-");
     threadPoolTaskScheduler.setAwaitTerminationSeconds(30);

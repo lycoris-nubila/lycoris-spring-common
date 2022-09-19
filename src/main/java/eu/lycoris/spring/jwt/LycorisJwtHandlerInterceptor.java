@@ -15,6 +15,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -24,18 +25,21 @@ import static eu.lycoris.spring.common.LycorisMessages.ERROR_WEB_REQUEST_INVALID
 
 public class LycorisJwtHandlerInterceptor extends HandlerInterceptorAdapter {
 
-  private MessageSource messageSource;
-  private LycorisJwtSecretProvider secretProvider;
+  private final @NotNull MessageSource messageSource;
+  private final @NotNull LycorisJwtSecretProvider secretProvider;
 
   public LycorisJwtHandlerInterceptor(
-      LycorisJwtSecretProvider secretProvider, MessageSource messageSource) {
+      @NotNull LycorisJwtSecretProvider secretProvider, @NotNull MessageSource messageSource) {
     this.secretProvider = secretProvider;
     this.messageSource = messageSource;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+  public boolean preHandle(
+      @NotNull HttpServletRequest request,
+      @NotNull HttpServletResponse response,
+      @NotNull Object handler)
       throws Exception {
     if (!(handler instanceof HandlerMethod)) {
       return true;
@@ -60,7 +64,7 @@ public class LycorisJwtHandlerInterceptor extends HandlerInterceptorAdapter {
 
     try {
       Jws<Claims> claims =
-          Jwts.parser().setSigningKey(secretProvider.getSecret()).parseClaimsJws(jwtToken);
+          Jwts.parser().setSigningKey(this.secretProvider.getSecret()).parseClaimsJws(jwtToken);
 
       String role = claims.getBody().get("role", String.class);
       String[] roles = claims.getBody().get("roles", String[].class);
@@ -71,7 +75,7 @@ public class LycorisJwtHandlerInterceptor extends HandlerInterceptorAdapter {
         if (jwtRoles.stream().noneMatch(validRoles::contains) && !validRoles.contains(role)) {
           response.sendError(
               HttpServletResponse.SC_UNAUTHORIZED,
-              messageSource.getMessage(
+              this.messageSource.getMessage(
                   ERROR_WEB_REQUEST_INVALID_JWT,
                   null,
                   HttpStatus.UNAUTHORIZED.getReasonPhrase(),
@@ -98,7 +102,7 @@ public class LycorisJwtHandlerInterceptor extends HandlerInterceptorAdapter {
     } catch (ExpiredJwtException exception) {
       response.sendError(
           HttpStatus.UNAUTHORIZED.value(),
-          messageSource.getMessage(
+          this.messageSource.getMessage(
               ERROR_WEB_REQUEST_EXPIRED_JWT,
               null,
               HttpStatus.UNAUTHORIZED.getReasonPhrase(),
@@ -107,7 +111,7 @@ public class LycorisJwtHandlerInterceptor extends HandlerInterceptorAdapter {
     } catch (JwtException exception) {
       response.sendError(
           HttpServletResponse.SC_UNAUTHORIZED,
-          messageSource.getMessage(
+          this.messageSource.getMessage(
               ERROR_WEB_REQUEST_INVALID_JWT,
               null,
               HttpStatus.UNAUTHORIZED.getReasonPhrase(),

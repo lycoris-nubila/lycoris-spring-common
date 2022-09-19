@@ -24,7 +24,9 @@ import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
+import javax.annotation.Nullable;
 import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
 
 @Slf4j
 @Aspect
@@ -32,19 +34,20 @@ import javax.validation.Validator;
 public class LycorisConfiguration {
 
   @Bean("jwtIdKeyGenerator")
-  public KeyGenerator keyGenerator() {
+  public @NotNull KeyGenerator keyGenerator() {
     return new JwtIdKeyGenerator();
   }
 
   @Bean
-  public MethodValidationPostProcessor methodValidationPostProcessor(Validator validator) {
+  public @NotNull MethodValidationPostProcessor methodValidationPostProcessor(
+      @NotNull Validator validator) {
     MethodValidationPostProcessor postProcessor = new MethodValidationPostProcessor();
     postProcessor.setValidator(validator);
     return postProcessor;
   }
 
   @Bean
-  public LocalValidatorFactoryBean validator(MessageSource messageSource) {
+  public @NotNull LocalValidatorFactoryBean validator(@NotNull MessageSource messageSource) {
     LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
     validator.setParameterNameDiscoverer(new LocalVariableTableParameterNameDiscoverer());
     validator.setValidationMessageSource(messageSource);
@@ -52,7 +55,8 @@ public class LycorisConfiguration {
   }
 
   @Bean
-  public ObjectMapper objectMapper(@Autowired(required = false) FilterProvider filterProvider) {
+  public @NotNull ObjectMapper objectMapper(
+      @Autowired(required = false) @Nullable FilterProvider filterProvider) {
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new Jdk8Module());
     mapper.registerModule(new JavaTimeModule());

@@ -11,11 +11,13 @@ import org.springframework.cloud.aws.core.config.AmazonWebserviceClientFactoryBe
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Nullable;
+
 @Configuration
 public class LycorisSecretConfiguration {
 
   @Bean(destroyMethod = "shutdown")
-  public AWSSecretsManager amazonSecret(LycorisProperties properties) throws Exception {
+  public @Nullable AWSSecretsManager amazonSecret(LycorisProperties properties) throws Exception {
     AmazonWebserviceClientFactoryBean<AWSSecretsManagerAsyncClient> clientFactoryBean =
         new AmazonWebserviceClientFactoryBean<>(
             AWSSecretsManagerAsyncClient.class,

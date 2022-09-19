@@ -5,6 +5,9 @@ import lombok.*;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
+
+import java.io.Serializable;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -13,17 +16,18 @@ import static lombok.AccessLevel.PROTECTED;
 @Setter(PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class I18n<I, D extends IDomainEntity<I>, L extends I18n<I, D, L>> {
+public abstract class I18n<
+    I extends Serializable, D extends IDomainEntity<I>, L extends I18n<I, D, L>> {
 
   @EmbeddedId
   @Getter(value = AccessLevel.PROTECTED)
-  protected I18nId id;
+  protected @NotNull I18nId id;
 
-  public String getLocale() {
-    return id.getLocale();
+  public @NotNull String getLocale() {
+    return this.id.getLocale();
   }
 
-  public abstract void update(L localization);
+  public abstract void update(@NotNull L localization);
 
-  protected abstract void setEntity(I18nDomainEntity<I, D, L> domainI18nEntity);
+  protected abstract void setEntity(@NotNull I18nDomainEntity<I, D, L> domainI18nEntity);
 }

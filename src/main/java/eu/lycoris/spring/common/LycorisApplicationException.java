@@ -1,13 +1,14 @@
 package eu.lycoris.spring.common;
 
-@SuppressWarnings("serial")
+import javax.validation.constraints.NotNull;
+
 public class LycorisApplicationException extends RuntimeException {
 
-  public LycorisApplicationException(String messageKey, Throwable cause) {
+  public LycorisApplicationException(@NotNull String messageKey, @NotNull Throwable cause) {
     super(messageKey, cause);
   }
 
-  public LycorisApplicationException(String messageKey) {
+  public LycorisApplicationException(@NotNull String messageKey) {
     super(messageKey);
   }
 }

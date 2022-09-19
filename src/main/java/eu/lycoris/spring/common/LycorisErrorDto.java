@@ -2,6 +2,8 @@ package eu.lycoris.spring.common;
 
 import lombok.*;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 
@@ -10,25 +12,25 @@ import java.util.Map;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class LycorisErrorDto {
-  private String message;
+  private @NotNull String message;
 
-  private List<String> errorList;
+  private @Nullable List<String> errorList;
 
-  private Map<String, String> fieldErrorList;
+  private @Nullable Map<String, String> fieldErrorList;
 
-  public static LycorisErrorDtoBuilder builder(String message) {
+  public static @NotNull LycorisErrorDtoBuilder builder(@NotNull String message) {
     return new LycorisErrorDtoBuilder().message(message);
   }
 
-  public List<String> getErrorList() {
-    return errorList;
+  public @Nullable List<String> getErrorList() {
+    return this.errorList;
   }
 
-  public Map<String, String> getFieldErrorList() {
-    return fieldErrorList;
+  public @Nullable Map<String, String> getFieldErrorList() {
+    return this.fieldErrorList;
   }
 
-  public String getMessage() {
-    return message;
+  public @NotNull String getMessage() {
+    return this.message;
   }
 }

@@ -1,6 +1,9 @@
 package eu.lycoris.spring.jwt;
 
+import javax.validation.constraints.NotNull;
+
 public interface LycorisJwtSecretProvider {
 
-  public String getSecret();
+  @NotNull
+  String getSecret();
 }

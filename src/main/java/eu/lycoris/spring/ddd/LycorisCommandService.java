@@ -11,25 +11,32 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
+
 @Slf4j
 @Service
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 public class LycorisCommandService {
 
-  @Autowired private ObjectMapper objectMapper;
+  private final @NotNull ObjectMapper objectMapper;
 
-  @Autowired private FailedCommandRepository failedCommandRepository;
+  private final @NotNull FailedCommandRepository failedCommandRepository;
+
+  public LycorisCommandService(
+      @NotNull ObjectMapper objectMapper,
+      @NotNull FailedCommandRepository failedCommandRepository) {
+    this.objectMapper = objectMapper;
+    this.failedCommandRepository = failedCommandRepository;
+  }
 
   public void saveCommand(
-      Command command,
-      Class<?> serviceClass,
-      String serviceMethodName)
+      @NotNull Command command, @NotNull Class<?> serviceClass, @NotNull String serviceMethodName)
       throws JsonProcessingException {
-    String serializedCommand = objectMapper.writeValueAsString(command);
+    String serializedCommand = this.objectMapper.writeValueAsString(command);
 
     log.info("Saving command {}", serializedCommand);
 
-    failedCommandRepository.save(
+    this.failedCommandRepository.save(
         FailedCommand.builder(
                 serializedCommand, command.getClass(), serviceClass, serviceMethodName)
             .build());

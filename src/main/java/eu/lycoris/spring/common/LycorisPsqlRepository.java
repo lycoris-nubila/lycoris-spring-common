@@ -11,6 +11,7 @@ import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
 import javax.persistence.LockModeType;
+import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -18,25 +19,30 @@ import java.util.Optional;
 import java.util.UUID;
 
 @NoRepositoryBean
-public interface LycorisPsqlRepository<I, C> extends Repository<C, UUID> {
+interface LycorisPsqlRepository<I, C> extends Repository<C, UUID> {
 
-  public List<I> findAll();
+  @NotNull
+  List<I> findAll();
 
-  public Page<I> findAll(Pageable pageable);
+  @NotNull
+  Page<I> findAll(@NotNull Pageable pageable);
 
-  public List<I> findAll(Sort sort);
+  @NotNull
+  List<I> findAll(@NotNull Sort sort);
 
-  public Optional<I> findById(UUID id);
+  @NotNull
+  Optional<I> findById(@NotNull UUID id);
 
-  public default Optional<C> findForSaveById(UUID id) {
+  default @NotNull Optional<C> findForSaveById(@NotNull UUID id) {
     this.createAdvisoryLock(generateLong(id));
     return this.findForUpdateById(id);
   }
 
   @Lock(LockModeType.PESSIMISTIC_WRITE)
-  public Optional<C> findForUpdateById(UUID id);
+  @NotNull
+  Optional<C> findForUpdateById(@NotNull UUID id);
 
-  public default long generateLong(UUID id) {
+  default long generateLong(UUID id) {
     final ByteBuffer buffer = ByteBuffer.wrap(new byte[16]);
     buffer.putLong(id.getLeastSignificantBits());
     buffer.putLong(id.getMostSignificantBits());
@@ -46,19 +52,22 @@ public interface LycorisPsqlRepository<I, C> extends Repository<C, UUID> {
   }
 
   @Modifying
-  public Optional<C> save(C entity);
+  @NotNull
+  Optional<C> save(@NotNull C entity);
 
   @Modifying
-  public Optional<C> saveAndFlush(C entity);
+  @NotNull
+  Optional<C> saveAndFlush(@NotNull C entity);
 
-  public void flush();
-
-  @Modifying
-  public void delete(C entity);
+  void flush();
 
   @Modifying
-  public List<C> saveAll(Iterable<C> entities);
+  void delete(@NotNull C entity);
+
+  @Modifying
+  @NotNull
+  List<C> saveAll(@NotNull Iterable<C> entities);
 
   @Query(value = "select cast(pg_advisory_xact_lock(:id) as varchar)", nativeQuery = true)
-  void createAdvisoryLock(@Param("id") Long id);
+  void createAdvisoryLock(@NotNull @Param("id") Long id);
 }

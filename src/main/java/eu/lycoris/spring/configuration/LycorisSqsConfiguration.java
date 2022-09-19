@@ -23,13 +23,15 @@ import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.handler.annotation.support.PayloadMethodArgumentResolver;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 
 @Configuration
 public class LycorisSqsConfiguration {
 
   @Bean(destroyMethod = "shutdown")
-  public AmazonSQS amazonSQS(LycorisProperties properties) throws Exception {
+  public @NotNull AmazonSQS amazonSQS(LycorisProperties properties) throws Exception {
     AmazonWebserviceClientFactoryBean<AmazonSQSAsyncClient> clientFactoryBean =
         new AmazonWebserviceClientFactoryBean<>(
             AmazonSQSAsyncClient.class,
@@ -42,15 +44,18 @@ public class LycorisSqsConfiguration {
   }
 
   @Bean
-  public QueueMessageHandler queueMessageHandler(QueueMessageHandlerFactory messageHandlerFactory) {
+  public @NotNull QueueMessageHandler queueMessageHandler(
+      QueueMessageHandlerFactory messageHandlerFactory) {
     QueueMessageHandler handler = messageHandlerFactory.createQueueMessageHandler();
     handler.afterPropertiesSet();
     return handler;
   }
 
   @Bean
-  public SimpleMessageListenerContainerFactory simpleMessageListenerContainerFactory(
-      AmazonSQSAsync amazonSqs, QueueMessageHandler messageHandler, LycorisProperties properties) {
+  public @NotNull SimpleMessageListenerContainerFactory simpleMessageListenerContainerFactory(
+      @NotNull AmazonSQSAsync amazonSqs,
+      @NotNull QueueMessageHandler messageHandler,
+      LycorisProperties properties) {
     SimpleMessageListenerContainerFactory factory = new SimpleMessageListenerContainerFactory();
     factory.setMaxNumberOfMessages(properties.getSqs().getMaxNumberOfMessages());
     factory.setQueueMessageHandler(messageHandler);
@@ -60,7 +65,7 @@ public class LycorisSqsConfiguration {
   }
 
   @Bean(destroyMethod = "destroy")
-  public SimpleMessageListenerContainer simpleMessageListenerContainer(
+  public @NotNull SimpleMessageListenerContainer simpleMessageListenerContainer(
       SimpleMessageListenerContainerFactory factory) throws Exception {
     SimpleMessageListenerContainer container = factory.createSimpleMessageListenerContainer();
     container.setMessageHandler(factory.getQueueMessageHandler());
@@ -69,15 +74,15 @@ public class LycorisSqsConfiguration {
   }
 
   @Bean
-  public QueueMessagingTemplate queueMessagingTemplate(
-      AmazonSQSAsync amazonSqs, ObjectMapper objectMapper) {
+  public @NotNull QueueMessagingTemplate queueMessagingTemplate(
+      @NotNull AmazonSQSAsync amazonSqs, @NotNull ObjectMapper objectMapper) {
     return new QueueMessagingTemplate(
         amazonSqs, (ResourceIdResolver) null, messageConverter(objectMapper));
   }
 
   @Bean
-  public QueueMessageHandlerFactory queueMessageHandlerFactory(
-      QueueMessagingTemplate queueMessagingTemplate, ObjectMapper objectMapper) {
+  public @NotNull QueueMessageHandlerFactory queueMessageHandlerFactory(
+      @NotNull QueueMessagingTemplate queueMessagingTemplate, @NotNull ObjectMapper objectMapper) {
     QueueMessageHandlerFactory factory = new QueueMessageHandlerFactory();
     factory.setArgumentResolvers(
         Collections.<HandlerMethodArgumentResolver>singletonList(
@@ -86,7 +91,7 @@ public class LycorisSqsConfiguration {
     return factory;
   }
 
-  private MappingJackson2MessageConverter messageConverter(ObjectMapper objectMapper) {
+  private MappingJackson2MessageConverter messageConverter(@NotNull ObjectMapper objectMapper) {
     MappingJackson2MessageConverter messageConverter = new MappingJackson2MessageConverter();
     messageConverter.setSerializedPayloadClass(String.class);
     messageConverter.setStrictContentTypeMatch(false);

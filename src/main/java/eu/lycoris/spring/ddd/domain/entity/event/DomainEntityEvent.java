@@ -1,17 +1,13 @@
 package eu.lycoris.spring.ddd.domain.entity.event;
 
-import eu.lycoris.spring.ddd.domain.entity.IDomainEntity;
-import org.springframework.context.ApplicationEvent;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-public class DomainEntityEvent<I, D extends IDomainEntity<I>> extends ApplicationEvent {
+import javax.validation.constraints.NotNull;
 
-  public DomainEntityEvent(D source) {
-    super(source);
-  }
+@Getter
+@AllArgsConstructor
+public class DomainEntityEvent<I> {
 
-  @Override
-  @SuppressWarnings("unchecked")
-  public D getSource() {
-    return (D) super.getSource();
-  }
+  @NotNull private final I entityId;
 }

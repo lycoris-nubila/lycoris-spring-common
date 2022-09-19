@@ -6,6 +6,8 @@ import org.springframework.data.domain.AfterDomainEventPublication;
 import org.springframework.data.domain.DomainEvents;
 import org.springframework.util.Assert;
 
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,9 +16,9 @@ import java.util.List;
 import static lombok.AccessLevel.PROTECTED;
 
 @NoArgsConstructor(access = PROTECTED)
-public class EventDomainVO<I, D extends IDomainVO<I>> {
+public class EventDomainVO<I extends Serializable, D extends IDomainVO<I>> {
 
-  @Transient private final List<DomainVOEvent<I, D>> domainEvents = new ArrayList<>();
+  @Transient private final @NotNull List<DomainVOEvent<I>> domainEvents = new ArrayList<>();
 
   @AfterDomainEventPublication
   protected void clearDomainEvents() {
@@ -24,11 +26,11 @@ public class EventDomainVO<I, D extends IDomainVO<I>> {
   }
 
   @DomainEvents
-  protected Collection<Object> domainEvents() {
-    return Collections.unmodifiableList(domainEvents);
+  protected @NotNull Collection<Object> domainEvents() {
+    return Collections.unmodifiableList(this.domainEvents);
   }
 
-  protected DomainVOEvent<I, D> registerEvent(DomainVOEvent<I, D> event) {
+  protected @NotNull DomainVOEvent<I> registerEvent(@NotNull DomainVOEvent<I> event) {
     Assert.notNull(event, "Domain event must not be null!");
     this.domainEvents.add(event);
     return event;

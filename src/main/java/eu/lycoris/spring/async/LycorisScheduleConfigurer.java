@@ -7,14 +7,20 @@ import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
+import javax.validation.constraints.NotNull;
+
 @Configuration
 @Profile({"!test"})
 public class LycorisScheduleConfigurer implements SchedulingConfigurer {
 
-  @Autowired private ThreadPoolTaskScheduler taskScheduler;
+  private final @NotNull ThreadPoolTaskScheduler taskScheduler;
+
+  public LycorisScheduleConfigurer(@NotNull ThreadPoolTaskScheduler taskScheduler) {
+    this.taskScheduler = taskScheduler;
+  }
 
   @Override
   public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-    taskRegistrar.setTaskScheduler(taskScheduler);
+    taskRegistrar.setTaskScheduler(this.taskScheduler);
   }
 }

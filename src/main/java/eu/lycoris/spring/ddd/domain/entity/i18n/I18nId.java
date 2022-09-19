@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -15,11 +16,11 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class I18nId implements Serializable {
 
-  private UUID id;
+  private @NotNull UUID id;
 
-  private String locale;
+  private @NotNull String locale;
 
-  public I18nId(String locale) {
+  public I18nId(@NotNull String locale) {
     this.locale = locale;
   }
 }
