@@ -37,11 +37,11 @@ public class FailedCommand {
 
   private @Nullable Instant nextRetryTime;
 
-  public void scheduleNextRetry(int maxRetry, int backoffMillisec) {
+  public void scheduleNextRetry(int maxRetry, int backoffMillisecond) {
     if (this.retryCount < maxRetry) {
       this.nextRetryTime =
           Instant.ofEpochMilli(
-              (long) ++this.retryCount * backoffMillisec + System.currentTimeMillis());
+              (long) ++this.retryCount * backoffMillisecond + System.currentTimeMillis());
     } else {
       this.nextRetryTime = null;
     }
@@ -49,7 +49,7 @@ public class FailedCommand {
 
   public static @NotNull FailedCommandBuilder builder(
       @NotNull String command,
-      @NotNull Class<? extends Command> commmandClass,
+      @NotNull Class<? extends Command> commandClass,
       @NotNull Class<?> serviceClass,
       @NotNull String serviceMethodName) {
     return new FailedCommandBuilder()
@@ -59,6 +59,6 @@ public class FailedCommand {
         .nextRetryTime(Instant.now())
         .serviceMethodName(serviceMethodName)
         .serviceClass(serviceClass.getCanonicalName())
-        .commmandClass(commmandClass.getCanonicalName());
+        .commmandClass(commandClass.getCanonicalName());
   }
 }

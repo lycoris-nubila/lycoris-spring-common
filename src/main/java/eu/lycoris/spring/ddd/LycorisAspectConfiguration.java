@@ -2,6 +2,7 @@ package eu.lycoris.spring.ddd;
 
 import eu.lycoris.spring.ddd.command.Command;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -35,7 +36,6 @@ public class LycorisAspectConfiguration {
     return result;
   }
 
-  @Nullable
   @Around("@annotation(LycorisRetryCommand)")
   public Object saveCommandForRetry(ProceedingJoinPoint joinPoint) throws Throwable {
     if (joinPoint.getArgs().length != 1) {
@@ -47,26 +47,24 @@ public class LycorisAspectConfiguration {
           "LycorisRetryCommand must be used on method with one argument of type Command");
     }
 
-    boolean isFromRetryService =
-        Arrays.stream(Thread.currentThread().getStackTrace())
-            .anyMatch(
-                stackTrace ->
-                    stackTrace
-                        .getClassName()
-                        .equals(LycorisCommandRetryService.class.getCanonicalName()));
-
     Command command = (Command) joinPoint.getArgs()[0];
 
-    log.info("Executing command {}", command);
+    log.debug("Executing command {}", command);
 
     try {
       Object result = joinPoint.proceed();
 
-      log.info("Executed command {} returning {}", command, result);
+      if (command.getFuture() != null) {
+        command.getFuture().complete(false);
+      }
+
+      log.debug("Executed command {} returning {}", command, result);
 
       return result;
     } catch (Exception e) {
-      if (!isFromRetryService) {
+      if (command.getFuture() != null) {
+        command.getFuture().complete(true);
+      } else {
         this.lycorisCommandService.saveCommand(
             command,
             joinPoint.getSignature().getDeclaringType(),

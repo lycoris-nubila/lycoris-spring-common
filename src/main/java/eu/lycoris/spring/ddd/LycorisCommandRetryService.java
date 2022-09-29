@@ -7,15 +7,19 @@ import eu.lycoris.spring.ddd.command.FailedCommandRepository;
 import eu.lycoris.spring.ddd.service.ApplicationService;
 import eu.lycoris.spring.property.LycorisProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Method;
 import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -43,13 +47,12 @@ public class LycorisCommandRetryService {
   }
 
   @SuppressWarnings("unchecked")
+  @Transactional(propagation = Propagation.REQUIRED)
   @Scheduled(
       fixedDelayString = "${lycoris.command-retry.delay-millisec:10000}",
       initialDelayString = "${lycoris.command-retry.delay-millisec:10000}")
-  private void retryFailedCommands() {
-    List<FailedCommand> failedCommands =
-        StreamSupport.stream(this.failedCommandRepository.findAll().spliterator(), false)
-            .collect(Collectors.toList());
+  public void retryFailedCommands() {
+    List<FailedCommand> failedCommands = this.failedCommandRepository.findAll();
     for (FailedCommand failedCommand : failedCommands) {
       if (failedCommand.getNextRetryTime() == null) {
         log.info(
@@ -67,6 +70,7 @@ public class LycorisCommandRetryService {
         Class<? extends Command> commandClass =
             (Class<? extends Command>) Class.forName(failedCommand.getCommmandClass());
         Command command = this.objectMapper.readValue(failedCommand.getCommand(), commandClass);
+        command.setFuture(new CompletableFuture<>());
 
         Class<? extends ApplicationService> serviceClass =
             (Class<? extends ApplicationService>) Class.forName(failedCommand.getServiceClass());
@@ -76,7 +80,14 @@ public class LycorisCommandRetryService {
 
         serviceMethod.invoke(this.listableBeanFactory.getBean(serviceClass), command);
 
-        this.failedCommandRepository.delete(failedCommand);
+        if (command.getFuture() != null && BooleanUtils.isTrue(command.getFuture().get())) {
+          failedCommand.scheduleNextRetry(
+              this.lycorisProperties.getCommandRetry().getMaxAttempts(),
+              this.lycorisProperties.getCommandRetry().getBackoffMillisec());
+          this.failedCommandRepository.save(failedCommand);
+        } else {
+          this.failedCommandRepository.delete(failedCommand);
+        }
       } catch (Exception e) {
         failedCommand.scheduleNextRetry(
             this.lycorisProperties.getCommandRetry().getMaxAttempts(),
