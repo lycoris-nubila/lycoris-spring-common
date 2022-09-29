@@ -2,6 +2,7 @@ package eu.lycoris.spring.ddd.command;
 
 import lombok.*;
 
+import javax.annotation.Nullable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.Min;
@@ -20,7 +21,7 @@ import static lombok.AccessLevel.PROTECTED;
 @AllArgsConstructor(access = PROTECTED)
 public class FailedCommand {
 
-  @Id private UUID id;
+  @Id private @NotNull UUID id;
 
   @NotNull @NotEmpty private String command;
 
@@ -34,22 +35,23 @@ public class FailedCommand {
   @NotNull
   private Integer retryCount;
 
-  private Instant nextRetryTime;
+  @Nullable private Instant nextRetryTime;
 
-  public void scheduleNextRetry(int maxRetry, int backoffMillisec) {
-    if (retryCount < maxRetry) {
+  public void scheduleNextRetry(int maxRetry, int backoffMillisecond) {
+    if (this.retryCount < maxRetry) {
       this.nextRetryTime =
-          Instant.ofEpochMilli(++retryCount * backoffMillisec + System.currentTimeMillis());
+          Instant.ofEpochMilli(
+              (long) ++this.retryCount * backoffMillisecond + System.currentTimeMillis());
     } else {
       this.nextRetryTime = null;
     }
   }
 
-  public static FailedCommandBuilder builder(
-      String command,
-      Class<? extends Command> commmandClass,
-      Class<?> serviceClass,
-      String serviceMethodName) {
+  public static @NotNull FailedCommandBuilder builder(
+      @NotNull String command,
+      @NotNull Class<? extends Command> commandClass,
+      @NotNull Class<?> serviceClass,
+      @NotNull String serviceMethodName) {
     return new FailedCommandBuilder()
         .retryCount(0)
         .command(command)
@@ -57,6 +59,6 @@ public class FailedCommand {
         .nextRetryTime(Instant.now())
         .serviceMethodName(serviceMethodName)
         .serviceClass(serviceClass.getCanonicalName())
-        .commmandClass(commmandClass.getCanonicalName());
+        .commmandClass(commandClass.getCanonicalName());
   }
 }
