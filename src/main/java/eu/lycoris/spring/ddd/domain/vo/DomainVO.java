@@ -13,6 +13,8 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
+import java.io.Serializable;
+
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
@@ -20,7 +22,7 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor
 @RequiredArgsConstructor(access = PROTECTED)
 @TypeDef(defaultForType = String.class, typeClass = TextType.class)
-public class DomainVO<I, D extends IDomainVO<I>> extends EventDomainVO<I, D>
+public class DomainVO<I extends Serializable, D extends IDomainVO<I>> extends EventDomainVO<I, D>
     implements IDomainVO<I> {
 
   @Id @NotNull @NonNull private I id;

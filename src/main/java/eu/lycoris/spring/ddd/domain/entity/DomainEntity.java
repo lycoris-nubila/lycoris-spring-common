@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.Instant;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -24,7 +25,7 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor
 @RequiredArgsConstructor(access = PROTECTED)
 @TypeDef(defaultForType = String.class, typeClass = TextType.class)
-public class DomainEntity<I, D extends IDomainEntity<I>> extends EventDomainEntity<I, D>
+public class DomainEntity<I extends Serializable, D extends IDomainEntity<I>> extends EventDomainEntity<I, D>
     implements IDomainEntity<I> {
 
   @Id @NotNull @NonNull private I id;

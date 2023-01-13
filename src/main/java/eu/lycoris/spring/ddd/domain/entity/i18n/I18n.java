@@ -6,6 +6,8 @@ import lombok.*;
 import javax.persistence.EmbeddedId;
 import javax.persistence.MappedSuperclass;
 
+import java.io.Serializable;
+
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
@@ -13,7 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Setter(PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class I18n<I, D extends IDomainEntity<I>, L extends I18n<I, D, L>> {
+public abstract class I18n<I extends Serializable, D extends IDomainEntity<I>, L extends I18n<I, D, L>> {
 
   @EmbeddedId
   @Getter(value = AccessLevel.PROTECTED)
