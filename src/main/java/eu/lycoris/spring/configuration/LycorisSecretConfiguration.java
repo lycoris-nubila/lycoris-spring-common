@@ -2,28 +2,38 @@ package eu.lycoris.spring.configuration;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
-import com.amazonaws.services.secretsmanager.AWSSecretsManager;
-import com.amazonaws.services.secretsmanager.AWSSecretsManagerAsyncClient;
+import com.amazonaws.services.secretsmanager.AWSSecretsManagerAsync;
+import com.amazonaws.services.secretsmanager.AWSSecretsManagerAsyncClientBuilder;
+import com.amazonaws.xray.handlers.TracingHandler;
 import eu.lycoris.spring.property.LycorisProperties;
-import org.springframework.cloud.aws.core.config.AmazonWebserviceClientFactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 @Configuration
 public class LycorisSecretConfiguration {
 
   @Bean(destroyMethod = "shutdown")
-  public AWSSecretsManager amazonSecret(LycorisProperties properties) throws Exception {
-    AmazonWebserviceClientFactoryBean<AWSSecretsManagerAsyncClient> clientFactoryBean =
-        new AmazonWebserviceClientFactoryBean<>(
-            AWSSecretsManagerAsyncClient.class,
-            new AWSStaticCredentialsProvider(
-                new BasicAWSCredentials(
-                    properties.getSecret().getAccessKey(), properties.getSecret().getSecretKey())),
-            () -> Region.getRegion(Regions.fromName(properties.getSecret().getRegion())));
-    clientFactoryBean.afterPropertiesSet();
-    return clientFactoryBean.getObject();
+  public @NotNull AWSSecretsManagerAsync amazonSecret(
+      @NotNull LycorisProperties properties,
+      @Nullable @Autowired(required = false) TracingHandler handler) {
+    AWSSecretsManagerAsyncClientBuilder builder =
+        AWSSecretsManagerAsyncClientBuilder.standard()
+            .withCredentials(
+                new AWSStaticCredentialsProvider(
+                    new BasicAWSCredentials(
+                        properties.getSecret().getAccessKey(),
+                        properties.getSecret().getSecretKey())))
+            .withRegion(Regions.fromName(properties.getSecret().getRegion()));
+
+    if (handler != null) {
+      builder.withRequestHandlers(handler);
+    }
+
+    return builder.build();
   }
 }
