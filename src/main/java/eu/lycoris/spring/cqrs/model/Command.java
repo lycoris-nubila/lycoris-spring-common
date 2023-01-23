@@ -1,17 +1,25 @@
 package eu.lycoris.spring.cqrs.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
 
 import javax.annotation.Nullable;
-import javax.persistence.Transient;
 import java.io.Serializable;
-import java.util.concurrent.CompletableFuture;
+import java.util.UUID;
 
 @Getter
 @Setter
-public abstract class Command implements Serializable {
+@SuperBuilder
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@type")
+public class Command implements Serializable {
 
-  @Nullable @JsonIgnore @Transient private CompletableFuture<Boolean> future;
+  @Nullable private Class<?> serviceClass;
+
+  @Nullable private String methodName;
+
+  @Nullable private UUID id;
 }
