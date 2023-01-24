@@ -1,21 +1,19 @@
 package eu.lycoris.spring.ddd.vo;
 
+import static lombok.AccessLevel.PROTECTED;
+
+import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.type.TextType;
-
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
-
-import java.io.Serializable;
-
-import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @MappedSuperclass

@@ -1,7 +1,15 @@
 package eu.lycoris.spring.jwt;
 
+import static eu.lycoris.spring.common.LycorisMessages.ERROR_WEB_REQUEST_EXPIRED_JWT;
+import static eu.lycoris.spring.common.LycorisMessages.ERROR_WEB_REQUEST_INVALID_JWT;
+
 import eu.lycoris.spring.common.LycorisSkipJwt;
 import io.jsonwebtoken.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
@@ -12,15 +20,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static eu.lycoris.spring.common.LycorisMessages.ERROR_WEB_REQUEST_EXPIRED_JWT;
-import static eu.lycoris.spring.common.LycorisMessages.ERROR_WEB_REQUEST_INVALID_JWT;
 
 public class LycorisJwtHandlerInterceptor extends HandlerInterceptorAdapter {
 

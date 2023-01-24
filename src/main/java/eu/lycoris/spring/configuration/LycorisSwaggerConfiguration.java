@@ -1,8 +1,13 @@
 package eu.lycoris.spring.configuration;
 
+import static eu.lycoris.spring.common.LycorisMessages.*;
+
 import com.fasterxml.classmate.TypeResolver;
 import eu.lycoris.spring.common.LycorisErrorDto;
 import eu.lycoris.spring.property.LycorisProperties;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -18,12 +23,6 @@ import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static eu.lycoris.spring.common.LycorisMessages.*;
 
 @Configuration
 @EnableSwagger2

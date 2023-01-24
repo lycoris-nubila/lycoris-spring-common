@@ -1,6 +1,11 @@
 package eu.lycoris.spring.web;
 
+import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+
 import eu.lycoris.spring.common.LycorisCorsHeader;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,12 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-
-import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 @EnableWebSecurity
 public class LycorisWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
@@ -48,13 +47,11 @@ public class LycorisWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
     configuration.addAllowedOrigin("*");
 
     if (corsHeaders != null) {
-      corsHeaders
-          .stream()
+      corsHeaders.stream()
           .filter(LycorisCorsHeader::isAllowed)
           .map(LycorisCorsHeader::getName)
           .forEach(configuration::addAllowedHeader);
-      corsHeaders
-          .stream()
+      corsHeaders.stream()
           .filter(LycorisCorsHeader::isExposed)
           .map(LycorisCorsHeader::getName)
           .forEach(configuration::addExposedHeader);

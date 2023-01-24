@@ -5,14 +5,13 @@ import com.apollographql.federation.graphqljava._Entity;
 import graphql.introspection.Introspection;
 import graphql.schema.*;
 import graphql.schema.idl.SchemaPrinter;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -87,8 +86,7 @@ public class GraphQLFederation {
     return Federation.transform(schema)
         .fetchEntities(
             env ->
-                env.<List<Map<String, Object>>>getArgument(_Entity.argumentName)
-                    .stream()
+                env.<List<Map<String, Object>>>getArgument(_Entity.argumentName).stream()
                     .map(values -> lookup.apply(env, values))
                     .collect(Collectors.toList()))
         .resolveEntityType(resolve)

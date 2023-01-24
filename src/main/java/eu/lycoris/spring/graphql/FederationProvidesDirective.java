@@ -1,7 +1,6 @@
 package eu.lycoris.spring.graphql;
 
 import io.leangen.graphql.annotations.types.GraphQLDirective;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

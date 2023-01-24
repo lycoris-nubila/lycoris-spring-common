@@ -1,21 +1,20 @@
 package eu.lycoris.spring.ddd.entity.i18n;
 
-import eu.lycoris.spring.ddd.entity.IDomainEntity;
-import lombok.*;
+import static lombok.AccessLevel.PROTECTED;
 
+import eu.lycoris.spring.ddd.entity.IDomainEntity;
+import java.io.Serializable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.MappedSuperclass;
-
-import java.io.Serializable;
-
-import static lombok.AccessLevel.PROTECTED;
+import lombok.*;
 
 @Getter
 @MappedSuperclass
 @Setter(PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class I18n<I extends Serializable, D extends IDomainEntity<I>, L extends I18n<I, D, L>> {
+public abstract class I18n<
+    I extends Serializable, D extends IDomainEntity<I>, L extends I18n<I, D, L>> {
 
   @EmbeddedId
   @Getter(value = AccessLevel.PROTECTED)

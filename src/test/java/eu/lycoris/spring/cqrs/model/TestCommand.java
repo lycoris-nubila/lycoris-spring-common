@@ -1,12 +1,10 @@
 package eu.lycoris.spring.cqrs.model;
 
-import lombok.Builder;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
-
-import javax.validation.constraints.NotNull;
 
 @Value
 @Jacksonized

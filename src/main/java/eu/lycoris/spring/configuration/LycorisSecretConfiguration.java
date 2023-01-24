@@ -7,12 +7,11 @@ import com.amazonaws.services.secretsmanager.AWSSecretsManagerAsync;
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerAsyncClientBuilder;
 import com.amazonaws.xray.handlers.TracingHandler;
 import eu.lycoris.spring.property.LycorisProperties;
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 @Configuration
 public class LycorisSecretConfiguration {

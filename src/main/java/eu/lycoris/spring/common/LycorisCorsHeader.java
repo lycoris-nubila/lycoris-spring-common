@@ -5,10 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class LycorisCorsHeader{
-	
-	private String name;
-	private boolean exposed;
-	private boolean allowed;
-	
+public class LycorisCorsHeader {
+
+  private String name;
+  private boolean exposed;
+  private boolean allowed;
 }

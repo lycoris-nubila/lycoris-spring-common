@@ -1,13 +1,12 @@
 package eu.lycoris.spring.common;
 
-import lombok.NoArgsConstructor;
+import static lombok.AccessLevel.PRIVATE;
 
-import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.UUID;
-
-import static lombok.AccessLevel.PRIVATE;
+import javax.validation.constraints.NotNull;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
 public class LycorisUtils {

@@ -2,6 +2,7 @@ package eu.lycoris.spring.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.lycoris.spring.cqrs.LycorisCommandTasklet;
+import javax.validation.constraints.NotNull;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.JobRegistry;
@@ -12,12 +13,12 @@ import org.springframework.batch.core.configuration.support.JobRegistryBeanPostP
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-
-import javax.validation.constraints.NotNull;
 
 @Configuration
 @EnableBatchProcessing
+@ComponentScan("eu.lycoris.spring.cqrs")
 public class LycorisBatchConfiguration {
   private final @NotNull JobBuilderFactory jobs;
   private final @NotNull StepBuilderFactory steps;

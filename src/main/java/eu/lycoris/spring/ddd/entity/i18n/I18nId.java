@@ -1,11 +1,10 @@
 package eu.lycoris.spring.ddd.entity.i18n;
 
-import lombok.*;
-import org.hibernate.annotations.BatchSize;
-
-import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.UUID;
+import javax.persistence.Embeddable;
+import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 @Getter
 @Setter

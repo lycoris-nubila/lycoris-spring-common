@@ -8,6 +8,9 @@ import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import com.amazonaws.xray.handlers.TracingHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.lycoris.spring.property.LycorisProperties;
+import java.util.Collections;
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.aws.core.env.ResourceIdResolver;
 import org.springframework.cloud.aws.messaging.config.QueueMessageHandlerFactory;
@@ -20,10 +23,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.handler.annotation.support.PayloadMethodArgumentResolver;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
-
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
-import java.util.Collections;
 
 @Configuration
 public class LycorisSqsConfiguration {

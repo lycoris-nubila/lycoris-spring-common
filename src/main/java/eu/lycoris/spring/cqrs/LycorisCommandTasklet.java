@@ -2,6 +2,8 @@ package eu.lycoris.spring.cqrs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.lycoris.spring.cqrs.model.Command;
+import java.lang.reflect.Method;
+import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.batch.core.StepContribution;
@@ -9,9 +11,6 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.ListableBeanFactory;
-
-import javax.validation.constraints.NotNull;
-import java.lang.reflect.Method;
 
 @Value
 @Builder

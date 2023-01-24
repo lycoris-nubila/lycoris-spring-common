@@ -1,20 +1,14 @@
 package eu.lycoris.spring.graphql;
 
+import static eu.lycoris.spring.common.LycorisMessages.ERROR_WEB_REQUEST_CONSTRAINT_VIOLATION;
+import static graphql.Assert.assertNotNull;
+
 import eu.lycoris.spring.common.LycorisApplicationException;
 import eu.lycoris.spring.common.LycorisAuthenticationException;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.execution.ResultPath;
 import graphql.language.SourceLocation;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,9 +16,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
-
-import static eu.lycoris.spring.common.LycorisMessages.ERROR_WEB_REQUEST_CONSTRAINT_VIOLATION;
-import static graphql.Assert.assertNotNull;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 @ToString
 @EqualsAndHashCode

@@ -1,6 +1,13 @@
 package eu.lycoris.spring.web;
 
+import static eu.lycoris.spring.common.LycorisMessages.ERROR_WEB_REQUEST_INVALID_FIELD;
+import static eu.lycoris.spring.common.LycorisMessages.ERROR_WEB_REQUEST_INVALID_INPUT;
+
 import eu.lycoris.spring.common.LycorisErrorDto;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -18,14 +25,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static eu.lycoris.spring.common.LycorisMessages.ERROR_WEB_REQUEST_INVALID_FIELD;
-import static eu.lycoris.spring.common.LycorisMessages.ERROR_WEB_REQUEST_INVALID_INPUT;
 
 @ControllerAdvice
 @ConditionalOnBean({MessageSource.class})
@@ -85,8 +84,7 @@ public class LycorisControllerAdvice extends ResponseEntityExceptionHandler {
       WebRequest request) {
 
     Map<String, String> fieldErrorMessages =
-        errors
-            .stream()
+        errors.stream()
             .filter(error -> error instanceof FieldError)
             .map(error -> (FieldError) error)
             .collect(
@@ -100,8 +98,7 @@ public class LycorisControllerAdvice extends ResponseEntityExceptionHandler {
                             LocaleContextHolder.getLocale())));
 
     List<String> errorMessages =
-        errors
-            .stream()
+        errors.stream()
             .filter(error -> !(error instanceof FieldError))
             .map(ObjectError::getDefaultMessage)
             .collect(Collectors.toList());

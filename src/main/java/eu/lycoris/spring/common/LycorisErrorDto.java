@@ -1,9 +1,8 @@
 package eu.lycoris.spring.common;
 
-import lombok.*;
-
 import java.util.List;
 import java.util.Map;
+import lombok.*;
 
 @Builder
 @Getter(AccessLevel.PUBLIC)
