@@ -76,7 +76,7 @@ public class GraphQLFederation {
     String printedSchema =
         new SchemaPrinter(SchemaPrinter.Options.defaultOptions().includeDirectives(true))
             .print(schema);
-    log.info(printedSchema);
+    log.debug(printedSchema);
   }
 
   private static GraphQLSchema implementLookupAndResolve(

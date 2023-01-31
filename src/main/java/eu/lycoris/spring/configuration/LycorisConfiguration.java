@@ -84,14 +84,14 @@ public class LycorisConfiguration {
 
   @Around("@annotation(eu.lycoris.spring.common.LycorisLogMethod)")
   public Object logMethod(ProceedingJoinPoint joinPoint) throws Throwable {
-    log.info(
+    log.debug(
         "Executing method {} with arguments {}",
         joinPoint.getSignature().getName(),
         StringUtils.join(joinPoint.getArgs(), ", "));
 
     Object result = joinPoint.proceed();
 
-    log.info(
+    log.debug(
         "Executed method {} with arguments {} returning {}",
         joinPoint.getSignature().getName(),
         StringUtils.join(joinPoint.getArgs(), ", "),
