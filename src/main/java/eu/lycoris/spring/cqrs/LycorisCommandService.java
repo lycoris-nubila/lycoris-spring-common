@@ -6,7 +6,12 @@ import javax.validation.constraints.NotNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.*;
+import org.springframework.batch.core.launch.JobOperator;
+import org.springframework.batch.core.launch.NoSuchJobException;
+import org.springframework.batch.core.launch.NoSuchJobExecutionException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -18,16 +23,31 @@ import org.springframework.transaction.annotation.Transactional;
 public class LycorisCommandService {
 
   private final @NotNull Job commandJob;
+  private final @NotNull JobOperator jobOperator;
   private final @NotNull ObjectMapper objectMapper;
   private final @NotNull JobRepository jobRepository;
 
   public LycorisCommandService(
       @Qualifier("commandJob") @NotNull Job commandJob,
+      @NotNull JobOperator jobOperator,
       @NotNull ObjectMapper objectMapper,
       @NotNull JobRepository jobRepository) {
     this.commandJob = commandJob;
+    this.jobOperator = jobOperator;
     this.objectMapper = objectMapper;
     this.jobRepository = jobRepository;
+  }
+
+  public void retryCommand(@NotNull Long executionId) {
+    try {
+      this.jobOperator.restart(executionId);
+    } catch (JobInstanceAlreadyCompleteException
+        | NoSuchJobExecutionException
+        | NoSuchJobException
+        | JobRestartException
+        | JobParametersInvalidException e) {
+      log.error("Can't restart command", e);
+    }
   }
 
   @SneakyThrows

@@ -11,7 +11,7 @@
     </parent>
     <groupId>eu.lycoris</groupId>
     <artifactId>spring-common</artifactId>
-    <version>1.2.45</version>
+    <version>1.2.37</version>
     <name>lycoris-spring</name>
     <description>Lycoris Spring Utils</description>
 
