@@ -27,13 +27,13 @@ public class LycorisCommandService {
       throws JsonProcessingException {
     String serializedCommand = objectMapper.writeValueAsString(command);
 
-    log.info("Saving command {}", serializedCommand);
+    log.debug("Saving command {}", serializedCommand);
 
     failedCommandRepository.save(
         FailedCommand.builder(
                 serializedCommand, command.getClass(), serviceClass, serviceMethodName)
             .build());
 
-    log.info("Saved command {}", serializedCommand);
+    log.debug("Saved command {}", serializedCommand);
   }
 }

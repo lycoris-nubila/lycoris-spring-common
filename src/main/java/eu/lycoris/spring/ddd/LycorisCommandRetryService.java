@@ -41,13 +41,13 @@ public class LycorisCommandRetryService {
             .collect(Collectors.toList());
     for (FailedCommand failedCommand : failedCommands) {
       if (failedCommand.getNextRetryTime() == null) {
-        log.info(
+        log.debug(
             "Command {} as reached maximum attempt ({})",
             failedCommand,
             lycorisProperties.getCommandRetry().getMaxAttempts());
         continue;
       } else if (failedCommand.getNextRetryTime().isAfter(Instant.now())) {
-        log.info(
+        log.debug(
             "Command {} will be retried at ({})", failedCommand, failedCommand.getNextRetryTime());
         continue;
       }

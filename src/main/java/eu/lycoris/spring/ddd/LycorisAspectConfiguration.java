@@ -50,12 +50,12 @@ public class LycorisAspectConfiguration {
 
     Command command = (Command) joinPoint.getArgs()[0];
 
-    log.info("Executing command {}", command);
+    log.debug("Executing command {}", command);
 
     try {
       Object result = joinPoint.proceed();
 
-      log.info("Executed command {} returning {}", command, result);
+      log.debug("Executed command {} returning {}", command, result);
 
       return result;
     } catch (Exception e) {
