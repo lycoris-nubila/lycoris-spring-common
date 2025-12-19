@@ -10,12 +10,11 @@ import graphql.GraphQLError;
 import graphql.execution.ResultPath;
 import graphql.language.SourceLocation;
 import java.lang.reflect.UndeclaredThrowableException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
+import javax.persistence.PersistenceException;
+import javax.persistence.RollbackException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
@@ -24,6 +23,8 @@ import lombok.ToString;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.TransactionException;
 
 @ToString
 @EqualsAndHashCode
@@ -86,10 +87,25 @@ public class LycorisGraphQLFetchError implements GraphQLError {
           exception.getCause().getMessage(),
           LocaleContextHolder.getLocale());
     } else {
+      Throwable throwable =
+          Arrays.stream(ExceptionUtils.getThrowables(exception))
+              .filter(
+                  e ->
+                      Arrays.asList(
+                                  LycorisAuthenticationException.class,
+                                  LycorisApplicationException.class,
+                                  PersistenceException.class,
+                                  TransactionException.class,
+                                  DataAccessException.class)
+                              .contains(e.getClass())
+                          && !(e instanceof RollbackException))
+              .findFirst()
+              .orElse(exception);
+
       return messageSource.getMessage(
-          exception.getMessage(),
+          throwable.getMessage(),
           new Object[] {},
-          exception.getMessage(),
+          throwable.getMessage(),
           LocaleContextHolder.getLocale());
     }
   }
